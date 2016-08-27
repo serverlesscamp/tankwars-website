@@ -1,4 +1,8 @@
-
+<script>
+	window.config = {
+		apiEndpoint : '{{site.api_endpoint}}'
+	};
+</script>
 {% if jekyll.environment == "production" %}
 
 <script src="/v/main-{{site.asset_version}}.js"></script>

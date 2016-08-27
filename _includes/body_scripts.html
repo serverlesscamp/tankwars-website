@@ -1,0 +1,11 @@
+
+{% if jekyll.environment == "production" %}
+
+<script src="/v/main-{{site.asset_version}}.js"></script>
+{% else %}
+
+	{% for script in site.scripts %}
+		<script src="/{{script}}"></script>
+	{% endfor %}
+
+{% endif %}

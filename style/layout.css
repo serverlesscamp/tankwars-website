@@ -1,0 +1,31 @@
+html, body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+header {
+  border-bottom: 1px solid black;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 1em;
+  padding-bottom: 1em;
+}
+header nav {
+  display: inline-block;
+}
+content {
+  flex-grow: 1;
+  flex-shrink: 0;
+  display: block;
+}
+footer {
+  border-top: 1px solid black;
+  margin-top: 1em;
+  padding-top: 1em;
+  flex-shrink: 0;
+}

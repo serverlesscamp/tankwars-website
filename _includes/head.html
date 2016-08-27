@@ -1,0 +1,33 @@
+<meta charset="UTF-8">
+<title>{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
+<meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+<link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
+<link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}">
+
+
+<!-- Shorcut icon -->
+<link rel="shortcut icon" href="{{site.url}}/assets/icon-32.png">
+<link rel="apple-touch-icon-precomposed" sizes="152x152" href="{{site.url}}/assets/icon-152.png">
+
+<!-- Schema.org markup for Google+ -->
+<meta itemprop="name" content="{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}">
+<meta itemprop="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+<meta itemprop="image" content="{%if page.social_header %}{{page.social_header | prepend: site.baseurl | prepend: site.url}}{%else%}{{site.social_header| prepend: site.baseurl | prepend: site.url}}{%endif%}">
+
+<!-- Twitter Card data -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="{{site.twitter}}">
+<meta name="twitter:title" content="{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}">
+<meta name="twitter:description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+<meta name="twitter:creator" content="{{site.twitter}}">
+<!-- Twitter summary card with large image must be at least 280x150px -->
+<meta name="twitter:image:src" content="{%if page.social_header %}{{page.social_header | prepend: site.baseurl | prepend: site.url}}{%else%}{{site.social_header| prepend: site.baseurl | prepend: site.url}}{%endif%}">
+
+<!-- Open Graph data -->
+<meta property="og:title"  content="{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}" />
+<meta property="og:image" content="{%if page.social_header %}{{page.social_header | prepend: site.baseurl | prepend: site.url}}{%else%}{{site.social_header| prepend: site.baseurl | prepend: site.url}}{%endif%}" />
+<meta property="og:description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}"/>
+<meta property="og:site_name" content="{{site.title}}" />
+

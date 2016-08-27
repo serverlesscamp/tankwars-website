@@ -1,0 +1,8 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />  
+<meta name="asset-v" content="{{site.asset_version}}" />
+{% if jekyll.environment == "production" %}
+<link rel="stylesheet" type="text/css" media="all" href="/v/main-{{site.asset_version}}.css" />
+{% else %}
+<link rel="stylesheet" type="text/css" media="all" href="/style/main.css" />
+{% endif %}
+

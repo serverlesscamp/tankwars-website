@@ -86,7 +86,7 @@ TW.initMatchPage = function () {
 	});
 	twModel.on('error', function (err) {
 		status.innerHTML = 'Error';
-		log.value = log.value + '\n' + 'ERROR:' + err;
+		log.value = log.value + '\n' + 'ERROR:' + JSON.stringify(err);
 	});
 	twModel.on('newMatch', function (id, map) {
 		matchContainer.classList.add('active');

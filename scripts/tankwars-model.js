@@ -1,5 +1,6 @@
-/*global makeEmitter, TW */
-TW.TankWarsModel = function (tankWarsApi) {
+/*global module, require */
+var makeEmitter = require('./mini-emit');
+module.exports = function TankWarsModel(tankWarsApi) {
 	'use strict';
 	var self = makeEmitter(this);
 	self.initiateMatch = function () {

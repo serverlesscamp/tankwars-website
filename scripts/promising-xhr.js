@@ -1,5 +1,5 @@
-/*global XMLHttpRequest, Promise, TW */
-TW.xhrAjaxProvider = function (options) {
+/*global XMLHttpRequest, Promise, module */
+module.exports = function promisingXhr(options) {
 	'use strict';
 	var xhr = new XMLHttpRequest(),
 	method = options.method || 'GET',

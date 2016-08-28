@@ -1,5 +1,5 @@
-/*global window */
-window.makeEmitter = function (target) {
+/*global module */
+module.exports = function makeEmitter(target) {
 	'use strict';
 	var listeners = {};
 	target.on = function (event, handler) {

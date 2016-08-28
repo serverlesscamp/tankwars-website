@@ -1,5 +1,5 @@
-/*global TW */
-TW.Api = function (apiEndpoint, ajaxProvider) {
+/*global module */
+module.exports = function TankwarsClientApi(apiEndpoint, ajaxProvider) {
 	'use strict';
 	var self = this;
 	self.initiateMatch = function (options) {

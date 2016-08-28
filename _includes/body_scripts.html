@@ -8,8 +8,6 @@
 <script src="/v/main-{{site.asset_version}}.js"></script>
 {% else %}
 
-	{% for script in site.scripts %}
-		<script src="/{{script}}"></script>
-	{% endfor %}
+<script src="/v/dev-{{site.asset_version}}.js"></script>
 
 {% endif %}

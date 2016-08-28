@@ -30,7 +30,7 @@ TW.xhrAjaxProvider = function (options) {
 			});
 		});
 		xhr.addEventListener('timeout', function () {
-			reject({status: 'timeout'});
+			reject('timeout');
 		});
 		xhr.send(postData);
 	});

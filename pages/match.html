@@ -3,6 +3,25 @@ layout: default
 title: Run a match
 ---
 
-<button role="initMatch">New Match</button>
+<div role="matchContainer">
+
+<button role="initMatch" class="hide-when-active">New Match</button>
+
+<span role="status"></span>
+<div class="dashboard show-when-active">
+	Match ID: <span role="matchId"></span><br/>
+</div>
+
+<div role="matchMap" class="show-when-active">
+
+</div>
+
+
+
+</div>
 
 <textarea role="log"></textarea>
+
+<script>
+window.addEventListener('load', function () { TW.initMatchPage(); });
+</script>

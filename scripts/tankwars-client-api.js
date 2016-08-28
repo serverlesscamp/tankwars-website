@@ -9,6 +9,8 @@ TW.Api = function (apiEndpoint, ajaxProvider) {
 			data: options
 		}).then(function (response) {
 			return response.body;
+		}).catch(function (response) {
+			throw response.body || response.status || response;
 		});
 	};
 };

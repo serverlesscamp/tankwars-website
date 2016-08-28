@@ -7,7 +7,7 @@ github_username: serverlesscamp
 # Build settings
 markdown: kramdown
 exclude: ['*.sh', 'template']
-scripts: ['scripts/tw.js', 'scripts/promising-xhr.js', 'scripts/tankwars-client-api.js', 'scripts/site.js']
+scripts: ['scripts/tw.js', 'scripts/promising-xhr.js', 'scripts/mini-emit.js', 'scripts/tankwars-client-api.js', 'scripts/tankwars-model.js', 'scripts/site.js']
 social_header: "/assets/camp.png"
 s3_bucket: S3_BUCKET
 cloudfront_dist: CLOUDFRONT_DIST

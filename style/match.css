@@ -1,0 +1,15 @@
+[role=matchContainer]:not(.active) .show-when-active { display: none; }
+[role=matchContainer].active .hide-when-active { display: none; }
+
+[role=matchMap] {
+  background-image: linear-gradient(to right, #eee 1px, transparent 1px), linear-gradient(to bottom, #eee 1px, transparent 1px);
+  position: relative; 
+}
+[role=wall] {
+  position: absolute;
+  background-color: red;
+}
+[role=tank] {
+  position: absolute;
+  border: 1px solid black;
+}

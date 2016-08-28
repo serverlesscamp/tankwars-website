@@ -1,0 +1,41 @@
+---
+layout: default
+title: Test your API 
+body_class: test
+---
+
+<div role="matchContainer" class="column">
+	<div>
+		<label>Number of walls:</label> <input role="option" name="walls" value="10"/>
+		<label>Map Size:</label> <input role="option" name="mapSize" value="100"/>
+		<label>Max Wall Length:</label> <input role="option" name="maxWallLength" value="10"/>
+		<label>Wall strength:</label> <input role="option" name="wallStrength" value="10"/>
+		
+		<button role="randomMap">Randomize map</button>
+	</div>
+	<div class="row show-when-active">
+		<div role="matchMap"></div>
+		<div class="dashboard">
+			<div>
+				<label>Send:</label> 
+				<select role="command"> 
+					<option>---</option>
+				</select>
+				<label>To:</label>
+				<select role="tankIndex"> 
+					<option value="0">First tank</option>
+					<option value="1">Second tank</option>
+				</select>
+			</div>
+			<div>
+				<textarea placeholder="command JSON arguments" role="args">
+				</textarea>
+			</div>
+			<div><button role="execute">Send</button></div>
+		</div>
+	</div>
+</div>
+
+<script>
+window.addEventListener('load', function () { initTestPage(document, config); });
+</script>

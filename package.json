@@ -6,9 +6,10 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "clean-css": "^3.4.19
+    "clean-css": "^3.4.19"
   },
   "dependencies": {
+    "tankwars-game-controller": "github:serverlesscamp/tankwars-game-controller",
     "webpack": "^1.13.2"
   }
 }

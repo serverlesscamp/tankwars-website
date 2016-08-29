@@ -51,8 +51,8 @@ module.exports = function mapWidget(domElement, multiplier) {
 					tank = tanks[tankKey];
 				tankElement.style.top = tank.y * multiplier + 'px';
 				tankElement.style.left = tank.x * multiplier + 'px';
-				tankElement.style.width = (tank.width || 5) * multiplier + 'px';
-				tankElement.style.height = (tank.height || 10) * multiplier + 'px';
+				tankElement.style.width = (tank.length || 5) * multiplier + 'px';
+				tankElement.style.height = (tank.width || 10) * multiplier + 'px';
 				tankElement.style.transform = 'rotate(' + tank.direction + 'rad)';
 			});
 		};

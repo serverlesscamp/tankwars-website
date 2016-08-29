@@ -3,10 +3,25 @@ module.exports = function mapWidget(domElement, multiplier) {
 	'use strict';
 	var document = domElement.ownerDocument,
 		directions = {
-			right: '0deg',
-			top: '-90deg',
-			left: '-180deg',
-			bottom: '90deg'
+			right: 0,
+			top: 270,
+			left: 180,
+			bottom: 90
+		},
+		smoothRotation = function (domElement, newRotation) {
+			var currentRotation = parseInt(domElement.dataset.effectiveRotation) || 0,
+				delta = (newRotation - currentRotation) % 360,
+				effectiveRotation;
+
+			if (delta === 270) {
+				delta = -90;
+			} else if (delta === -270) {
+				delta = 90;
+			}
+			effectiveRotation = currentRotation + delta;
+			domElement.dataset.effectiveRotation = effectiveRotation;
+			domElement.style.transform = 'rotate(' + effectiveRotation + 'deg)';
+
 		},
 		getTankElement = function (tankKey) {
 			var tankElement = domElement.querySelector('[role=tank][key="' + tankKey + '"]');
@@ -55,11 +70,14 @@ module.exports = function mapWidget(domElement, multiplier) {
 			Object.keys(tanks).forEach(function (tankKey) {
 				var tankElement = getTankElement(tankKey),
 					tank = tanks[tankKey];
+
+
 				tankElement.style.top = tank.y * multiplier + 'px';
 				tankElement.style.left = tank.x * multiplier + 'px';
 				tankElement.style.width = (tank.length || 1) * multiplier + 'px';
 				tankElement.style.height = (tank.width || 1) * multiplier + 'px';
-				tankElement.style.transform = 'rotate(' + directions[tank.direction] + ')';
+				smoothRotation(tankElement, directions[tank.direction]);
+
 			});
 		};
 	domElement.updateMap = function (map) {

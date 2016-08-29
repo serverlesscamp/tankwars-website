@@ -12,4 +12,8 @@
 [role=tank] {
   position: absolute;
   border: 1px solid black;
+  border-right: 2px solid green;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  transition: all 1s ease-in-out;
 }

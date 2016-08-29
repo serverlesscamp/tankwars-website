@@ -2,6 +2,12 @@
 module.exports = function mapWidget(domElement, multiplier) {
 	'use strict';
 	var document = domElement.ownerDocument,
+		directions = {
+			right: '0deg',
+			top: '-90deg',
+			left: '-180deg',
+			bottom: '90deg'
+		},
 		getTankElement = function (tankKey) {
 			var tankElement = domElement.querySelector('[role=tank][key="' + tankKey + '"]');
 			if (!tankElement) {
@@ -51,9 +57,9 @@ module.exports = function mapWidget(domElement, multiplier) {
 					tank = tanks[tankKey];
 				tankElement.style.top = tank.y * multiplier + 'px';
 				tankElement.style.left = tank.x * multiplier + 'px';
-				tankElement.style.width = (tank.length || 5) * multiplier + 'px';
-				tankElement.style.height = (tank.width || 10) * multiplier + 'px';
-				tankElement.style.transform = 'rotate(' + tank.direction + 'rad)';
+				tankElement.style.width = (tank.length || 1) * multiplier + 'px';
+				tankElement.style.height = (tank.width || 1) * multiplier + 'px';
+				tankElement.style.transform = 'rotate(' + directions[tank.direction] + ')';
 			});
 		};
 	domElement.updateMap = function (map) {

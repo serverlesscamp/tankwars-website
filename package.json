@@ -2,14 +2,22 @@
   "name": "tankwars-website",
   "version": "1.0.0",
   "description": "Web site source code for tankwars tournaments",
-  "scripts": {},
+  "scripts": {
+    "pretest": "jshint scripts spec && jscs scripts spec",
+    "test": "node spec/support/jasmine-runner.js",
+    "debug": "node debug spec/support/jasmine-runner.js"
+  },
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "clean-css": "^3.4.19"
+    "clean-css": "^3.4.19",
+    "webpack": "^1.13.2",
+    "jasmine": "^2.4.1",
+    "jasmine-spec-reporter": "^2.4.0",
+    "jscs": "^3.0.7",
+    "jshint": "^2.9.3"
   },
   "dependencies": {
-    "tankwars-game-controller": "github:serverlesscamp/tankwars-game-controller",
-    "webpack": "^1.13.2"
+    "underscore": "^1.8.3"
   }
 }

@@ -1,11 +1,11 @@
 /*global module, require */
 
-var TankWars = require('tankwars-game-controller'),
+var TankWarsModel = require('./tankwars-model'),
 	mapWidget = require('./tankwars-map-widget');
 
 module.exports = function initMatchPage(document) {
 	'use strict';
-	var scaleMultiplier = 5,
+	var scaleMultiplier = 30,
 		findElement = function (role) {
 			return document.querySelector('[role=' + role + ']');
 		},
@@ -14,50 +14,52 @@ module.exports = function initMatchPage(document) {
 			var options = {};
 			Object.keys(optionFields).forEach(function (key) {
 				var field = optionFields[key];
-				options[field.getAttribute('name')] = parseInt(field.value);
+				if (field.getAttribute('data-type') === 'float') {
+					options[field.getAttribute('name')] = parseFloat(field.value);
+				} else {
+					options[field.getAttribute('name')] = parseInt(field.value);
+				}
 			});
 			return options;
 		},
 		commandSelector = findElement('command'),
 		tankSelector = findElement('tankIndex'),
-		argsField = findElement('args'),
 		updateCommandOptions = function (commands) {
 			commandSelector.innerHTML = '<option>---</option>' + commands.map(function (command) {
-				return '<option>' + command.name + '</option>';
+				return '<option>' + command + '</option>';
 			}).join(' ');
-			commandSelector.addEventListener('change', function () {
-				var hint = commands.find(function (command) {
-					return command.name === commandSelector.value;
-				});
-				argsField.value = (hint && JSON.stringify(hint.params, null, 2)) || '';
-			});
+		},
+		updateTankList = function (tanks) {
+			tankSelector.innerHTML = tanks.map(function (tank, index) {
+				return '<option value="' + index + '"> Tank ' + index + '</option>';
+			}).join(' ');
 		},
 		randomMap = findElement('randomMap'),
 		matchContainer = findElement('matchContainer'),
-
 		matchMap = mapWidget(findElement('matchMap'), scaleMultiplier),
-		gameController,
-		currentMap;
+		model = new TankWarsModel();
 
-
-	randomMap.addEventListener('click', function () {
-		currentMap = TankWars.buildMap(packOptions());
-		gameController = new TankWars.GameController(currentMap);
-		matchMap.updateMap(currentMap);
-		updateCommandOptions(gameController.getSupportedCommands());
+	model.on('newMatch', function (map) {
+		matchMap.updateMap(map);
+		updateCommandOptions(model.getSupportedCommands());
+		updateTankList(map.tanks);
 		matchContainer.classList.add('active');
+	});
+	model.on('change', function (map) {
+		matchMap.updateMap(map);
+	});
+	randomMap.addEventListener('click', function () {
+		model.newMatch(packOptions());
 	});
 	matchMap.addEventListener('click', function (e) {
 		if (e.target === this) {
-			gameController.addWall(Math.floor(e.offsetX / scaleMultiplier), Math.floor(e.offsetY / scaleMultiplier), packOptions().wallStrength);
+			model.addWall(Math.floor(e.offsetX / scaleMultiplier), Math.floor(e.offsetY / scaleMultiplier));
 		} else if (e.target.getAttribute('role') === 'wall') {
-			gameController.removeWall(parseInt(e.target.getAttribute('x')), parseInt(e.target.getAttribute('y')));
+			model.removeWall(parseInt(e.target.getAttribute('x')), parseInt(e.target.getAttribute('y')));
 		}
-		matchMap.updateMap(gameController.getMap());
 	});
 	findElement('execute').addEventListener('click', function () {
-		gameController.executeCommand(parseInt(tankSelector.value), commandSelector.value,  JSON.parse(argsField.value));
-		matchMap.updateMap(gameController.getMap());
+		model.executeCommand(parseInt(tankSelector.value), commandSelector.value);
 	});
 };
 

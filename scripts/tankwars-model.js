@@ -80,7 +80,7 @@ module.exports = function TankWarsModel(options) {
 		return completeMap();
 	};
 	self.getSupportedCommands = function () {
-		return ['left', 'right', 'forward', 'reverse', 'fire'];
+		return ['turn-left', 'turn-right', 'forward', 'reverse', 'fire'];
 	};
 	self.executeCommand = function (tankIndex, command) {
 		var tank = tanks[tankIndex],
@@ -91,7 +91,12 @@ module.exports = function TankWarsModel(options) {
 		} else if (command === 'reverse') {
 			tank.x -= movement.x;
 			tank.y -= movement.y;
+		} else if (command === 'turn-right') {
+			tank.direction =  directions[(directions.indexOf(tank.direction) + directions.length - 1) % directions.length];
+		} else if (command === 'turn-left') {
+			tank.direction =  directions[(directions.indexOf(tank.direction) + 1) % directions.length];
 		}
+
 		self.emit('change', completeMap());
 	};
 };

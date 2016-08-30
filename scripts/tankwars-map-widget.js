@@ -87,6 +87,8 @@ module.exports = function mapWidget(domElement, scale) {
 				smoothRotation(tankElement, directions[tank.direction]);
 				if (tank.strength === 0) {
 					tankElement.classList.add('exploded');
+				} else {
+					tankElement.classList.remove('exploded');
 				}
 			});
 		};

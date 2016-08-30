@@ -23,6 +23,8 @@ module.exports = function TankWarsModel(args) {
 		tankStrength = options.tankStrength,
 		wallDamage = options.wallDamage,
 		tankDamage = options.tankDamage,
+		weaponRange = options.weaponRange,
+		weaponDamage = options.weaponDamage,
 		completeMap = function () {
 			return {
 				walls: walls,
@@ -59,6 +61,12 @@ module.exports = function TankWarsModel(args) {
 				status: 'passive'
 			};
 		},
+		damageWall = function (wall, damage) {
+			wall.strength -= damage;
+			if (wall.strength <= 0) {
+				self.removeWall(wall.x, wall.y);
+			}
+		},
 		tryMoving = function (tank, direction) {
 			var movement = movements[direction],
 				x = tank.x + movement.x,
@@ -68,10 +76,7 @@ module.exports = function TankWarsModel(args) {
 			if (wallInFront) {
 				tank.status = 'bump-' + direction;
 				tank.strength = Math.max(0, tank.strength - wallDamage);
-				wallInFront.strength -= tankDamage;
-				if (wallInFront.strength <= 0) {
-					self.removeWall(wallInFront.x, wallInFront.y);
-				}
+				damageWall(wallInFront, tankDamage);
 			} else if (tankInFront) {
 				tank.status = 'bump-' + direction;
 				tank.strength = Math.max(0, tank.strength - tankDamage);
@@ -84,6 +89,27 @@ module.exports = function TankWarsModel(args) {
 				tank.status = 'moving';
 				tank.x += movement.x;
 				tank.y += movement.y;
+			}
+		},
+		tryShooting = function (tank) {
+			var movement = movements[tank.direction],
+				range, wallTarget, tankTarget, x = tank.x, y = tank.y;
+			if (!tank.ammo) {
+				return;
+			}
+			for (range = 0; range < weaponRange && !wallTarget && !tankTarget; range++) {
+				x += movement.x;
+				y += movement.y;
+				wallTarget = wallByPosition(x, y);
+				if (!wallTarget) {
+					tankTarget = tankByPosition(x, y);
+				}
+			}
+			tank.status = 'firing';
+			tank.target = {x: x, y: y};
+			tank.ammo -= 1;
+			if (wallTarget) {
+				damageWall(wallTarget, weaponDamage);
 			}
 		};
 	self.newMatch = function (options) {
@@ -99,6 +125,9 @@ module.exports = function TankWarsModel(args) {
 		tankStrength = options.tankStrength || 200;
 		wallDamage = options.wallDamage || 30;
 		tankDamage = options.tankDamage || 50;
+		weaponRange = options.weaponRange || 5;
+		weaponDamage = options.weaponDamage || 20;
+
 		walls = mazeBuilder(mapWidth, mapHeight, horizontalWallProb, verticalWallProb, minSpacing, randomizer).map(makeWall);
 		tanks = randomizer.shuffle(freeSpace(walls, mapWidth, mapHeight)).slice(-1 * numTanks).map(makeTank);
 		self.emit('newMatch', completeMap());
@@ -140,6 +169,8 @@ module.exports = function TankWarsModel(args) {
 		} else if (command === 'turn-left') {
 			tank.direction =  directions[(directions.indexOf(tank.direction) + 1) % directions.length];
 			tank.status = 'moving';
+		} else if (command === 'fire') {
+			tryShooting(tank);
 		}
 
 		self.emit('change', completeMap());

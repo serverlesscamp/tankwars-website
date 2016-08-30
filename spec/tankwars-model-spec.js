@@ -81,9 +81,149 @@ describe('TankWarsModel', function () {
 		});
 		expect(listener).toHaveBeenCalledWith(model.getMap());
 	});
+
 	describe('tank commands', function () {
+
+		['turn-left', 'turn-right', 'forward', 'reverse', 'fire'].forEach(function (command) {
+			it('ignores ' + command +  ' command for destroyed tanks', function () {
+				var model = new TankWarsModel({
+					tanks: [{x: 1, y: 2, strength: 0, direction: 'left', status: 'xxx'}],
+					walls: [{x: 3, y: 3, strength: 100}],
+					mapWidth: 5,
+					mapHeight: 5
+				});
+				model.executeCommand(0, 'command');
+				expect(model.getMap().tanks[0].direction).toEqual('left');
+				expect(model.getMap().tanks[0].x).toEqual(1);
+				expect(model.getMap().tanks[0].y).toEqual(2);
+				expect(model.getMap().tanks[0].strength).toEqual(0);
+				expect(model.getMap().tanks[0].status).toEqual('xxx');
+			});
+		});
 		[{name: 'left', x: -1, y: 0}, {name: 'right', x: 1, y: 0}, {name: 'top', x: 0, y: -1}, {name: 'bottom', x: 0, y: 1}].forEach(function (direction) {
 			describe('when facing ' + direction.name, function () {
+				describe('fire', function () {
+					it('shoots a wall next to the tank without damaging the tank', function () {
+						var model = new TankWarsModel({
+								tanks: [{x: 10, y: 9, strength: 200, ammo: 100, direction: direction.name}],
+								walls: [
+									{x: 10 + direction.x, y: 9 + direction.y, strength: 100},
+									{x: 10 + 2 * direction.x, y: 9 + 2 * direction.y, strength: 100}
+								],
+								mapWidth: 20,
+								mapHeight: 20,
+								wallDamage: 30,
+								tankDamage: 50,
+								weaponDamage: 20,
+								weaponRange: 5
+							}), tank;
+						model.executeCommand(0, 'fire');
+						tank = model.getMap().tanks[0];
+						expect(tank.direction).toEqual(direction.name);
+						expect(tank.x).toEqual(10);
+						expect(tank.y).toEqual(9);
+						expect(tank.status).toEqual('firing');
+						expect(tank.target).toEqual({x: 10 + direction.x, y: 9 + direction.y});
+						expect(tank.strength).toEqual(200);
+						expect(tank.ammo).toEqual(99);
+
+						expect(model.getMap().walls[0].strength).toEqual(80);
+						expect(model.getMap().walls[1].strength).toEqual(100);
+
+					});
+					it('shoots a reachable wall close to the tank', function () {
+						var model = new TankWarsModel({
+								tanks: [{x: 10, y: 9, strength: 200, ammo: 100, direction: direction.name}],
+								walls: [
+									{x: 10 + 3 * direction.x, y: 9 + 3 * direction.y, strength: 100},
+									{x: 10 + 2 * direction.x, y: 9 + 2 * direction.y, strength: 100}
+								],
+								mapWidth: 20,
+								mapHeight: 20,
+								wallDamage: 30,
+								tankDamage: 50,
+								weaponDamage: 20,
+								weaponRange: 5
+							}), tank;
+						model.executeCommand(0, 'fire');
+						tank = model.getMap().tanks[0];
+						expect(tank.status).toEqual('firing');
+						expect(tank.target).toEqual({x: 10 + 2 * direction.x, y: 9 + 2 * direction.y});
+						expect(tank.strength).toEqual(200);
+						expect(tank.ammo).toEqual(99);
+
+						expect(model.getMap().walls[0].strength).toEqual(100);
+						expect(model.getMap().walls[1].strength).toEqual(80);
+					});
+					it('destroys a wall if strength less than damage', function () {
+						var model = new TankWarsModel({
+								tanks: [{x: 10, y: 9, strength: 200, ammo: 100, direction: direction.name}],
+								walls: [
+									{x: 10 + 3 * direction.x, y: 9 + 3 * direction.y, strength: 100},
+									{x: 10 + 2 * direction.x, y: 9 + 2 * direction.y, strength: 10}
+								],
+								mapWidth: 20,
+								mapHeight: 20,
+								wallDamage: 30,
+								tankDamage: 50,
+								weaponDamage: 20,
+								weaponRange: 5
+							}), tank;
+						model.executeCommand(0, 'fire');
+						tank = model.getMap().tanks[0];
+						expect(tank.status).toEqual('firing');
+						expect(tank.target).toEqual({x: 10 + 2 * direction.x, y: 9 + 2 * direction.y});
+						expect(tank.strength).toEqual(200);
+						expect(tank.ammo).toEqual(99);
+						expect(model.getMap().walls.length).toEqual(1);
+						expect(model.getMap().walls[0].strength).toEqual(100);
+						expect(model.getMap().walls[0].x).toEqual(10 + 3 * direction.x);
+						expect(model.getMap().walls[0].y).toEqual(9 + 3 * direction.y);
+					});
+
+					it('shoots at blank space if there are no reachable targets', function () {
+						var model = new TankWarsModel({
+								tanks: [{x: 10, y: 9, strength: 200, ammo: 100, direction: direction.name}],
+								walls: [
+									{x: 10 + 2 * direction.x, y: 9 + 2 * direction.y, strength: 100}
+								],
+								mapWidth: 20,
+								mapHeight: 20,
+								wallDamage: 30,
+								tankDamage: 50,
+								weaponDamage: 20,
+								weaponRange: 1
+							}), tank;
+						model.executeCommand(0, 'fire');
+						tank = model.getMap().tanks[0];
+						expect(tank.ammo).toEqual(99);
+						expect(tank.status).toEqual('firing');
+						expect(tank.target).toEqual({x: 10 + direction.x, y: 9 + direction.y});
+						expect(tank.strength).toEqual(200);
+
+						expect(model.getMap().walls[0].strength).toEqual(100);
+					});
+					it('does not shoot if no ammo', function () {
+						var model = new TankWarsModel({
+								tanks: [{x: 10, y: 9, strength: 200, ammo: 0, direction: direction.name}],
+								walls: [
+									{x: 10 + 2 * direction.x, y: 9 + 2 * direction.y, strength: 100}
+								],
+								mapWidth: 20,
+								mapHeight: 20,
+								wallDamage: 30,
+								tankDamage: 50,
+								weaponDamage: 20,
+								weaponRange: 5
+							}), tank;
+						model.executeCommand(0, 'fire');
+						tank = model.getMap().tanks[0];
+						expect(tank.status).toEqual('static');
+
+						expect(model.getMap().walls[0].strength).toEqual(100);
+					});
+
+				});
 				describe('forward', function () {
 					it('moves tank by 1 place if space is available', function () {
 						var model = new TankWarsModel({
@@ -98,21 +238,6 @@ describe('TankWarsModel', function () {
 						expect(model.getMap().tanks[0].y).toEqual(2 + direction.y);
 						expect(model.getMap().tanks[0].strength).toEqual(100);
 						expect(model.getMap().tanks[0].status).toEqual('moving');
-					});
-					it('ignores commands for destroyed tanks', function () {
-						var model = new TankWarsModel({
-							tanks: [{x: 1, y: 2, strength: 0, direction: direction.name, status: 'xxx'}],
-							walls: [{x: 3, y: 3, strength: 100}],
-							mapWidth: 5,
-							mapHeight: 5
-						});
-						model.executeCommand(0, 'forward');
-						expect(model.getMap().tanks[0].direction).toEqual(direction.name);
-						expect(model.getMap().tanks[0].x).toEqual(1);
-						expect(model.getMap().tanks[0].y).toEqual(2);
-						expect(model.getMap().tanks[0].strength).toEqual(0);
-						expect(model.getMap().tanks[0].status).toEqual('xxx');
-
 					});
 					it('resets status for all other tanks', function () {
 						var model = new TankWarsModel({

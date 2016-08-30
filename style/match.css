@@ -45,6 +45,16 @@ tank:nth-of-type(2n)[status=moving] {
  animation-name: move-blue;
 }
 
+tank[status=firing] {
+ animation-duration: 0.5s;
+}
+tank:nth-of-type(2n+1)[status=firing] {
+ animation-name: fire-green;
+}
+tank:nth-of-type(2n)[status=firing] {
+ animation-name: fire-blue;
+}
+
 tank[status="bump-right"] {
   animation-duration: 1s;
   animation-name: bump-right;
@@ -155,6 +165,43 @@ tank.exploded::after {
     background-image: url('../assets/tiles/tank-blue-6.png');
   }
 }
+
+
+@keyframes fire-blue {
+  from {
+    background-image: url('../assets/tiles/tank-blue-fire-1.png');
+  }
+  25% {
+    background-image: url('../assets/tiles/tank-blue-fire-0.png');
+  }
+  50% {
+    background-image: url('../assets/tiles/tank-blue-fire-1.png');
+  }
+  75% {
+    background-image: url('../assets/tiles/tank-blue-fire-2.png');
+  }
+  to {
+    background-image: url('../assets/tiles/tank-blue-fire-1.png');
+  }
+}
+@keyframes fire-green {
+  from {
+    background-image: url('../assets/tiles/tank-green-fire-1.png');
+  }
+  25% {
+    background-image: url('../assets/tiles/tank-green-fire-0.png');
+  }
+  50% {
+    background-image: url('../assets/tiles/tank-green-fire-1.png');
+  }
+  75% {
+    background-image: url('../assets/tiles/tank-green-fire-2.png');
+  }
+  to {
+    background-image: url('../assets/tiles/tank-green-fire-1.png');
+  }
+}
+
 
 @keyframes bump-right {
   from {

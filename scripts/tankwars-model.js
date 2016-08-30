@@ -28,7 +28,8 @@ module.exports = function TankWarsModel(args) {
 				walls: walls,
 				tanks: tanks,
 				width: mapWidth,
-				height: mapHeight
+				height: mapHeight,
+				wallStrength: wallStrength
 			};
 		},
 		wallByPosition = function (x, y) {
@@ -98,8 +99,10 @@ module.exports = function TankWarsModel(args) {
 		self.emit('newMatch', completeMap());
 	};
 	self.addWall = function (x, y) {
-		walls.push(makeWall({x: x, y: y}));
-		self.emit('change', completeMap());
+		if (x >= 0 && x < mapWidth && y >= 0 && y < mapHeight) {
+			walls.push(makeWall({x: x, y: y}));
+			self.emit('change', completeMap());
+		}
 	};
 	self.removeWall = function (x, y) {
 		var existing = wallByPosition(x, y);

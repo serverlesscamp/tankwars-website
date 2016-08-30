@@ -63,8 +63,11 @@ module.exports = function initMatchPage(document) {
 		model.newMatch(packOptions());
 	});
 	matchMap.addEventListener('click', function (e) {
+		var x, y;
 		if (e.target === this) {
-			model.addWall(Math.floor(e.offsetX / scaleMultiplier), Math.floor(e.offsetY / scaleMultiplier));
+			x = Math.floor(e.offsetX / scaleMultiplier);
+			y = Math.floor(e.offsetY / scaleMultiplier);
+			model.addWall(x, y);
 		} else if (e.target.tagName === 'WALL') {
 			model.removeWall(parseInt(e.target.getAttribute('x')), parseInt(e.target.getAttribute('y')));
 		}
@@ -72,5 +75,6 @@ module.exports = function initMatchPage(document) {
 	findElement('execute').addEventListener('click', function () {
 		model.executeCommand(parseInt(tankSelector.value), commandSelector.value);
 	});
+	model.newMatch(packOptions());
 };
 

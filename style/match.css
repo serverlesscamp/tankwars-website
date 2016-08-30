@@ -2,26 +2,38 @@
 [role=matchContainer].active .hide-when-active { display: none; }
 
 [role=matchMap] {
-  background-image: linear-gradient(to right, #eee 1px, transparent 1px), linear-gradient(to bottom, #eee 1px, transparent 1px);
+  background-image: url('../assets/tiles/background-orange.png');
   position: relative; 
+  z-index: 0;
+  border: 15px solid black;
+  flex-shrink: 0;
 }
 wall {
   position: absolute;
   background-size: cover;
   background-position: center center;
-  background-image: url('../assets/tiles/wall-red-full.png');
+  background-image: url('../assets/tiles/wall-red-100.png');
   z-index: 5;
+}
+wall[status="75"] {
+  background-image: url('../assets/tiles/wall-red-75.png');
+}
+wall[status="50"] {
+  background-image: url('../assets/tiles/wall-red-50.png');
+}
+wall[status="25"] {
+  background-image: url('../assets/tiles/wall-red-25.png');
 }
 tank {
   position: absolute;
   transition: all 1s ease-in-out;
   background-size: cover;
   background-position: center center;
-  background-image: url('../assets/tiles/green-right.png');
+  background-image: url('../assets/tiles/tank-blue-0.png');
   z-index: 10;
 }
 tank:nth-of-type(1) {
-  background-image: url('../assets/tiles/blue-right.png');
+  background-image: url('../assets/tiles/tank-green-0.png');
 }
 
 tank[status="bump-right"] {
@@ -40,6 +52,43 @@ tank[status="bump-top"] {
   animation-duration: 1s;
   animation-name: bump-top;
 }
+tank[status="bump-top"]::after, tank[status="bump-left"]::after, tank[status="bump-right"]::after, tank[status="bump-bottom"]::after, tank[status="bumped"]::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation-duration: 0.5s;
+  animation-name: hit;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+}
+
+tank.exploded::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation-duration: 2s;
+  animation-delay: 1s;
+  animation-name: explode;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  background-image: url('../assets/tiles/exp-3.png');
+}
+
+@keyframes hit {
+  from {
+    background-image: url('../assets/tiles/exp-1.png');
+  }
+  to {
+    background-image: url('../assets/tiles/exp-2.png');
+  }
+}
+
 @keyframes bump-right {
   from {
     margin-left: 0;
@@ -84,3 +133,41 @@ tank[status="bump-top"] {
     margin-top: 0;
   }
 }
+
+
+@keyframes explode {
+  from {
+    background-image: url('../assets/tiles/exp-1.png');
+  }
+  10% {
+    background-image: url('../assets/tiles/exp-2.png');
+  }
+  20% {
+    background-image: url('../assets/tiles/exp-3.png');
+  }
+  30% {
+    background-image: none;
+  }
+  40% {
+    background-image: url('../assets/tiles/exp-1.png');
+  }
+  50% {
+    background-image: url('../assets/tiles/exp-2.png');
+  }
+  60% {
+    background-image: url('../assets/tiles/exp-3.png');
+  }
+  70% {
+    background-image: none;
+  }
+  80% {
+    background-image: url('../assets/tiles/exp-1.png');
+  }
+  90% {
+    background-image: url('../assets/tiles/exp-2.png');
+  }
+  to {
+    background-image: url('../assets/tiles/exp-3.png');
+  }
+}
+

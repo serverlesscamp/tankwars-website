@@ -88,7 +88,7 @@ module.exports = function TankWarsModel(args) {
 
 		mapWidth = options.mapWidth || 32;
 		mapHeight = options.mapHeight || 24;
-		wallStrength = options.wallStrength || 3;
+		wallStrength = options.wallStrength || 100;
 		maxAmmo = options.maxAmmo || 100;
 		tankStrength = options.tankStrength || 200;
 		wallDamage = options.wallDamage || 30;

@@ -1,4 +1,4 @@
-/*global module */
+/*global module, setTimeout */
 module.exports = function mapWidget(domElement, multiplier) {
 	'use strict';
 	var document = domElement.ownerDocument,
@@ -70,12 +70,17 @@ module.exports = function mapWidget(domElement, multiplier) {
 					tank = tanks[tankKey];
 
 
+
 				tankElement.style.top = tank.y * multiplier + 'px';
 				tankElement.style.left = tank.x * multiplier + 'px';
 				tankElement.style.width = (tank.length || 1) * multiplier + 'px';
 				tankElement.style.height = (tank.width || 1) * multiplier + 'px';
-				smoothRotation(tankElement, directions[tank.direction]);
+				tankElement.removeAttribute('status');
 
+				setTimeout(function () {
+					tankElement.setAttribute('status', tank.status);
+				}, 1);
+				smoothRotation(tankElement, directions[tank.direction]);
 			});
 		};
 	domElement.updateMap = function (map) {

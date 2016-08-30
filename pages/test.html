@@ -15,6 +15,12 @@ body_class: test
 		<label>Horizontal wall chance</label> <input role="option" data-type="float" name="horizontalWallProb" value="0.5" />
 	</div>
 	<div>
+		<label>Wall strength:</label> <input role="option" name="wallStrength" value="100"/>
+		<label>Tank strength:</label> <input role="option" name="tankStrength" value="200" />
+		<label>Wall impact damage:</label> <input role="option" name="wallDamage" value="30"/>
+		<label>Tank impact damage:</label> <input role="option" name="tankDamage" value="50"/>
+	</div>
+	<div>
 		<label>Number of tanks:</label> <input role="option" name="numTanks" value="2"/>
 		<button role="randomMap">Randomize map</button>
 	</div>
@@ -33,7 +39,21 @@ body_class: test
 				</select>
 			</div>
 			<div><button role="execute">Send</button></div>
+			<div>
+				<h1>Tank 0 status</h1>
+				<li>Strength: <span role="tankStatus" key="0" flag="strength" /></li>
+				<li>Ammo: <span role="tankStatus" key="0" flag="ammo" /></li>
+				<li>Status: <span role="tankStatus" key="0" flag="status" /></li>
+			</div>
+			<div>
+				<h1>Tank 1 status</h1>
+				<li>Strength: <span role="tankStatus" key="1" flag="strength" /></li>
+				<li>Ammo: <span role="tankStatus" key="1" flag="ammo" /></li>
+				<li>Status: <span role="tankStatus" key="1" flag="status" /></li>
+			</div>
+			
 		</div>
+
 	</div>
 </div>
 

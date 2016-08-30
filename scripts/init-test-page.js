@@ -29,6 +29,15 @@ module.exports = function initMatchPage(document) {
 				return '<option>' + command + '</option>';
 			}).join(' ');
 		},
+		updateTankStatuses = function (map) {
+			var statusElements = document.querySelectorAll('[role=tankStatus]');
+			Object.keys(statusElements).forEach(function (index) {
+				var element = statusElements[index],
+					tankKey = parseInt(element.getAttribute('key')),
+					tankProp = element.getAttribute('flag');
+				element.innerHTML = map.tanks[tankKey][tankProp];
+			});
+		},
 		updateTankList = function (tanks) {
 			tankSelector.innerHTML = tanks.map(function (tank, index) {
 				return '<option value="' + index + '"> Tank ' + index + '</option>';
@@ -44,9 +53,11 @@ module.exports = function initMatchPage(document) {
 		updateCommandOptions(model.getSupportedCommands());
 		updateTankList(map.tanks);
 		matchContainer.classList.add('active');
+		updateTankStatuses(map);
 	});
 	model.on('change', function (map) {
 		matchMap.updateMap(map);
+		updateTankStatuses(map);
 	});
 	randomMap.addEventListener('click', function () {
 		model.newMatch(packOptions());

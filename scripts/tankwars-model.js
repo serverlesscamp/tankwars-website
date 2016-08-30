@@ -1,10 +1,11 @@
 /*global module, require */
 var makeEmitter = require('./mini-emit'),
 	freeSpace = require('./free-space');
-module.exports = function TankWarsModel(options) {
+module.exports = function TankWarsModel(args) {
 	'use strict';
 	var self = makeEmitter(this),
-		mazeBuilder = (options && options.mazeBuilder) || require('./maze-builder'),
+		options = args || {},
+		mazeBuilder = options.mazeBuilder || require('./maze-builder'),
 		directions = ['top', 'left', 'bottom', 'right'],
 		movements = {
 			top: { x: 0, y: -1 },
@@ -12,14 +13,16 @@ module.exports = function TankWarsModel(options) {
 			bottom: {x: 0, y: 1},
 			right: {x: 1, y: 0}
 		},
-		randomizer = (options && options.randomizer) || require('./randomizer'),
-		walls,
-		tanks,
-		mapWidth,
-		mapHeight,
-		wallStrength,
-		maxAmmo,
-		tankStrength,
+		randomizer = options.randomizer || require('./randomizer'),
+		walls = options.walls,
+		tanks = options.tanks,
+		mapWidth = options.mapWidth,
+		mapHeight = options.mapHeight,
+		wallStrength = options.wallStrength,
+		maxAmmo = options.maxAmmo,
+		tankStrength = options.tankStrength,
+		wallDamage = options.wallDamage,
+		tankDamage = options.tankDamage,
 		completeMap = function () {
 			return {
 				walls: walls,
@@ -31,6 +34,11 @@ module.exports = function TankWarsModel(options) {
 		wallByPosition = function (x, y) {
 			return walls.find(function (wall) {
 				return wall.x === x && wall.y === y;
+			});
+		},
+		tankByPosition = function (x, y) {
+			return tanks.find(function (tank) {
+				return tank.x === x && tank.y === y;
 			});
 		},
 		makeWall = function (wallPosition) {
@@ -49,6 +57,28 @@ module.exports = function TankWarsModel(options) {
 				ammo: maxAmmo,
 				status: 'passive'
 			};
+		},
+		tryMoving = function (tank, direction) {
+			var movement = movements[direction],
+				wallInFront = wallByPosition(tank.x + movement.x, tank.y + movement.y),
+				tankInFront = tankByPosition(tank.x + movement.x, tank.y + movement.y);
+			if (wallInFront) {
+				tank.status = 'bump-' + direction;
+				tank.strength = Math.max(0, tank.strength - wallDamage);
+				wallInFront.strength -= tankDamage;
+				if (wallInFront.strength <= 0) {
+					self.removeWall(wallInFront.x, wallInFront.y);
+				}
+			} else if (tankInFront) {
+				tank.status = 'bump-' + direction;
+				tank.strength = Math.max(0, tank.strength - tankDamage);
+				tankInFront.strength = Math.max(0, tankInFront.strength - tankDamage);
+				tankInFront.status = 'bumped';
+			} else {
+				tank.status = 'moving';
+				tank.x += movement.x;
+				tank.y += movement.y;
+			}
 		};
 	self.newMatch = function (options) {
 		var numTanks = options.numTanks || 2,
@@ -61,6 +91,8 @@ module.exports = function TankWarsModel(options) {
 		wallStrength = options.wallStrength || 3;
 		maxAmmo = options.maxAmmo || 100;
 		tankStrength = options.tankStrength || 200;
+		wallDamage = options.wallDamage || 30;
+		tankDamage = options.tankDamage || 50;
 		walls = mazeBuilder(mapWidth, mapHeight, horizontalWallProb, verticalWallProb, minSpacing, randomizer).map(makeWall);
 		tanks = randomizer.shuffle(freeSpace(walls, mapWidth, mapHeight)).slice(-1 * numTanks).map(makeTank);
 		self.emit('newMatch', completeMap());
@@ -83,14 +115,14 @@ module.exports = function TankWarsModel(options) {
 		return ['turn-left', 'turn-right', 'forward', 'reverse', 'fire'];
 	};
 	self.executeCommand = function (tankIndex, command) {
-		var tank = tanks[tankIndex],
-			movement = movements[tank.direction];
+		var tank = tanks[tankIndex];
+		tanks.forEach(function (atank) {
+			atank.status = 'static';
+		});
 		if (command === 'forward') {
-			tank.x += movement.x;
-			tank.y += movement.y;
+			tryMoving(tank, tank.direction);
 		} else if (command === 'reverse') {
-			tank.x -= movement.x;
-			tank.y -= movement.y;
+			tryMoving(tank, directions[(directions.indexOf(tank.direction) + 2) % directions.length]);
 		} else if (command === 'turn-right') {
 			tank.direction =  directions[(directions.indexOf(tank.direction) + directions.length - 1) % directions.length];
 		} else if (command === 'turn-left') {

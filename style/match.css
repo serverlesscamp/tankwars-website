@@ -10,6 +10,7 @@ wall {
   background-size: cover;
   background-position: center center;
   background-image: url('../assets/tiles/wall-red-full.png');
+  z-index: 5;
 }
 tank {
   position: absolute;
@@ -17,7 +18,69 @@ tank {
   background-size: cover;
   background-position: center center;
   background-image: url('../assets/tiles/green-right.png');
+  z-index: 10;
 }
 tank:nth-of-type(1) {
   background-image: url('../assets/tiles/blue-right.png');
+}
+
+tank[status="bump-right"] {
+  animation-duration: 1s;
+  animation-name: bump-right;
+}
+tank[status="bump-left"] {
+  animation-duration: 1s;
+  animation-name: bump-left;
+}
+tank[status="bump-bottom"] {
+  animation-duration: 1s;
+  animation-name: bump-bottom;
+}
+tank[status="bump-top"] {
+  animation-duration: 1s;
+  animation-name: bump-top;
+}
+@keyframes bump-right {
+  from {
+    margin-left: 0;
+  }
+  50% {
+    margin-left: 5px;
+  }
+  to {
+    margin-left: 0;
+  }
+}
+@keyframes bump-left {
+  from {
+    margin-left: 0;
+  }
+  50% {
+    margin-left: -5px;
+  }
+  to {
+    margin-left: 0;
+  }
+}
+@keyframes bump-top {
+  from {
+    margin-top: 0;
+  }
+  50% {
+    margin-top: -5px;
+  }
+  to {
+    margin-top: 0;
+  }
+}
+@keyframes bump-bottom {
+  from {
+    margin-top: 0;
+  }
+  50% {
+    margin-top: 5px;
+  }
+  to {
+    margin-top: 0;
+  }
 }

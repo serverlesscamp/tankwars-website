@@ -14,6 +14,6 @@ describe('mazeBuilder', function () {
 		});
 	});
 	it('creates a maze by subviding chambers', function () {
-		expect(mazeBuilder(5, 5, 0.5, 0.5, 2, randomizer)).toEqual([{ x: 2, y: 2 }, { x: 1, y: 2 },{ x: 0, y: 2 }]);
+		expect(mazeBuilder(5, 5, 0.5, 0.5, 2, randomizer)).toEqual([{ x: 2, y: 2 }, { x: 2, y: 1 },{ x: 2, y: 0 }]);
 	});
 });

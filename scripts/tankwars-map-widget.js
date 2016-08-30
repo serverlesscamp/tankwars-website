@@ -73,7 +73,7 @@ module.exports = function mapWidget(domElement, scale) {
 		addBullet = function (tankElement, targetPosition) {
 			var bulletElement = document.createElement('bullet');
 			bulletElement.addEventListener('animationend', function () {
-				//	bulletElement.remove();
+				bulletElement.remove();
 			});
 			bulletElement.style.top = tankElement.style.top;
 			bulletElement.style.left = tankElement.style.left;

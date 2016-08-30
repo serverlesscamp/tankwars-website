@@ -155,6 +155,56 @@ describe('TankWarsModel', function () {
 						expect(model.getMap().walls[0].strength).toEqual(100);
 						expect(model.getMap().walls[1].strength).toEqual(80);
 					});
+
+					it('shoots a reachable tank', function () {
+						var model = new TankWarsModel({
+								tanks: [{x: 10, y: 9, strength: 200, ammo: 100, direction: direction.name},
+										{x: 10 + 2 * direction.x, y: 9 + 2 * direction.y, strength: 90}],
+								walls: [{x: 10 + 3 * direction.x, y: 9 + 3 * direction.y, strength: 100}],
+								mapWidth: 20,
+								mapHeight: 20,
+								wallDamage: 30,
+								tankDamage: 50,
+								weaponDamage: 20,
+								weaponRange: 5
+							}), tank;
+						model.executeCommand(0, 'fire');
+						tank = model.getMap().tanks[0];
+						expect(tank.status).toEqual('firing');
+						expect(tank.targetRange).toEqual(2);
+						expect(tank.strength).toEqual(200);
+						expect(tank.ammo).toEqual(99);
+
+						expect(model.getMap().tanks[1].strength).toEqual(70);
+						expect(model.getMap().tanks[1].status).toEqual('hit');
+						expect(model.getMap().walls[0].strength).toEqual(100);
+					});
+
+					it('destroys a tank if strength less than damage', function () {
+						var model = new TankWarsModel({
+								tanks: [{x: 10, y: 9, strength: 200, ammo: 100, direction: direction.name},
+										{x: 10 + 2 * direction.x, y: 9 + 2 * direction.y, strength: 10}],
+								walls: [{x: 10 + 3 * direction.x, y: 9 + 3 * direction.y, strength: 100}],
+								mapWidth: 20,
+								mapHeight: 20,
+								wallDamage: 30,
+								tankDamage: 50,
+								weaponDamage: 20,
+								weaponRange: 5
+							}), tank;
+						model.executeCommand(0, 'fire');
+						tank = model.getMap().tanks[0];
+						expect(tank.status).toEqual('firing');
+						expect(tank.targetRange).toEqual(2);
+						expect(tank.strength).toEqual(200);
+						expect(tank.ammo).toEqual(99);
+
+						expect(model.getMap().tanks[1].strength).toEqual(0);
+						expect(model.getMap().tanks[1].status).toEqual('hit');
+						expect(model.getMap().walls[0].strength).toEqual(100);
+					});
+
+
 					it('destroys a wall if strength less than damage', function () {
 						var model = new TankWarsModel({
 								tanks: [{x: 10, y: 9, strength: 200, ammo: 100, direction: direction.name}],

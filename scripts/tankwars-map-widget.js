@@ -92,7 +92,7 @@ module.exports = function mapWidget(domElement, scale) {
 				tankElement.style.left = tank.x * scale + 'px';
 				tankElement.style.width = (tank.length || 1) * scale + 'px';
 				tankElement.style.height = (tank.width || 1) * scale + 'px';
-				tankElement.removeAttribute('status');
+				//tankElement.removeAttribute('status');
 				tankElement.setAttribute('status', tank.status);
 				if (tank.status === 'firing') {
 					addBullet(tankElement, tank.targetRange);

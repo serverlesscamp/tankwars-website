@@ -85,12 +85,14 @@ tank[status="bump-top"] {
   animation-duration: 1s;
   animation-name: bump-top;
 }
-tank[status="bump-top"]::after, tank[status="bump-left"]::after, tank[status="bump-right"]::after, tank[status="bump-bottom"]::after, tank[status="bumped"]::after {
+tank[status="bump-top"]::after, tank[status="bump-left"]::after, tank[status="bump-right"]::after, tank[status="bump-bottom"]::after, 
+tank[status="bumped"]::after, tank[status="hit"]::after {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   animation-duration: 0.5s;
+  animation-delay: 0.5s;
   animation-name: hit;
   background-size: cover;
   width: 100%;

@@ -58,7 +58,7 @@ module.exports = function TankWarsModel(args) {
 				y: tankPosition.y,
 				strength: tankStrength,
 				ammo: maxAmmo,
-				status: 'passive'
+				status: 'static'
 			};
 		},
 		damageWall = function (wall, damage) {
@@ -67,6 +67,10 @@ module.exports = function TankWarsModel(args) {
 				self.removeWall(wall.x, wall.y);
 			}
 		},
+		damageTank = function (tank, status, damage) {
+			tank.status = status;
+			tank.strength = Math.max(0, tank.strength - damage);
+		},
 		tryMoving = function (tank, direction) {
 			var movement = movements[direction],
 				x = tank.x + movement.x,
@@ -74,17 +78,13 @@ module.exports = function TankWarsModel(args) {
 				wallInFront = wallByPosition(x, y),
 				tankInFront = tankByPosition(x, y);
 			if (wallInFront) {
-				tank.status = 'bump-' + direction;
-				tank.strength = Math.max(0, tank.strength - wallDamage);
+				damageTank(tank, 'bump-' + direction, wallDamage);
 				damageWall(wallInFront, tankDamage);
 			} else if (tankInFront) {
-				tank.status = 'bump-' + direction;
-				tank.strength = Math.max(0, tank.strength - tankDamage);
-				tankInFront.strength = Math.max(0, tankInFront.strength - tankDamage);
-				tankInFront.status = 'bumped';
+				damageTank(tank, 'bump-' + direction, tankDamage);
+				damageTank(tankInFront, 'bumped', tankDamage);
 			} else if (x < 0 || x >= mapWidth || y < 0 || y >= mapHeight) {
-				tank.status = 'bump-' + direction;
-				tank.strength = Math.max(0, tank.strength - wallDamage);
+				damageTank(tank, 'bump-' + direction, wallDamage);
 			} else {
 				tank.status = 'moving';
 				tank.x += movement.x;
@@ -110,6 +110,8 @@ module.exports = function TankWarsModel(args) {
 			tank.ammo -= 1;
 			if (wallTarget) {
 				damageWall(wallTarget, weaponDamage);
+			} else if (tankTarget) {
+				damageTank(tankTarget, 'hit', weaponDamage);
 			}
 		};
 	self.newMatch = function (options) {

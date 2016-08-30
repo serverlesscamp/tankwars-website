@@ -1,4 +1,4 @@
-/*global module, setTimeout */
+/*global module */
 module.exports = function mapWidget(domElement, scale) {
 	'use strict';
 	var document = domElement.ownerDocument,
@@ -24,13 +24,15 @@ module.exports = function mapWidget(domElement, scale) {
 			effectiveRotation = currentRotation + delta;
 			domElement.dataset.effectiveRotation = effectiveRotation;
 			domElement.style.transform = 'rotate(' + effectiveRotation + 'deg)';
-
 		},
 		getTankElement = function (tankKey) {
 			var tankElement = domElement.querySelector('tank[key="' + tankKey + '"]');
 			if (!tankElement) {
 				tankElement = document.createElement('tank');
 				tankElement.setAttribute('key', tankKey);
+				tankElement.addEventListener('animationend', function () {
+					tankElement.removeAttribute('status');
+				});
 				domElement.appendChild(tankElement);
 			}
 			return tankElement;
@@ -73,17 +75,12 @@ module.exports = function mapWidget(domElement, scale) {
 				var tankElement = getTankElement(tankKey),
 					tank = tanks[tankKey];
 
-
-
 				tankElement.style.top = tank.y * scale + 'px';
 				tankElement.style.left = tank.x * scale + 'px';
 				tankElement.style.width = (tank.length || 1) * scale + 'px';
 				tankElement.style.height = (tank.width || 1) * scale + 'px';
 				tankElement.removeAttribute('status');
-
-				setTimeout(function () {
-					tankElement.setAttribute('status', tank.status);
-				}, 1);
+				tankElement.setAttribute('status', tank.status);
 				smoothRotation(tankElement, directions[tank.direction]);
 				if (tank.strength === 0) {
 					tankElement.classList.add('exploded');

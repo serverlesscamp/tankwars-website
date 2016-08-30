@@ -136,8 +136,10 @@ module.exports = function TankWarsModel(args) {
 			tryMoving(tank, directions[(directions.indexOf(tank.direction) + 2) % directions.length]);
 		} else if (command === 'turn-right') {
 			tank.direction =  directions[(directions.indexOf(tank.direction) + directions.length - 1) % directions.length];
+			tank.status = 'moving';
 		} else if (command === 'turn-left') {
 			tank.direction =  directions[(directions.indexOf(tank.direction) + 1) % directions.length];
+			tank.status = 'moving';
 		}
 
 		self.emit('change', completeMap());

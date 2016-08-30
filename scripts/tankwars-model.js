@@ -106,7 +106,7 @@ module.exports = function TankWarsModel(args) {
 				}
 			}
 			tank.status = 'firing';
-			tank.target = {x: x, y: y};
+			tank.targetRange = range;
 			tank.ammo -= 1;
 			if (wallTarget) {
 				damageWall(wallTarget, weaponDamage);

@@ -123,7 +123,7 @@ describe('TankWarsModel', function () {
 						expect(tank.x).toEqual(10);
 						expect(tank.y).toEqual(9);
 						expect(tank.status).toEqual('firing');
-						expect(tank.target).toEqual({x: 10 + direction.x, y: 9 + direction.y});
+						expect(tank.targetRange).toEqual(1);
 						expect(tank.strength).toEqual(200);
 						expect(tank.ammo).toEqual(99);
 
@@ -148,7 +148,7 @@ describe('TankWarsModel', function () {
 						model.executeCommand(0, 'fire');
 						tank = model.getMap().tanks[0];
 						expect(tank.status).toEqual('firing');
-						expect(tank.target).toEqual({x: 10 + 2 * direction.x, y: 9 + 2 * direction.y});
+						expect(tank.targetRange).toEqual(2);
 						expect(tank.strength).toEqual(200);
 						expect(tank.ammo).toEqual(99);
 
@@ -172,7 +172,7 @@ describe('TankWarsModel', function () {
 						model.executeCommand(0, 'fire');
 						tank = model.getMap().tanks[0];
 						expect(tank.status).toEqual('firing');
-						expect(tank.target).toEqual({x: 10 + 2 * direction.x, y: 9 + 2 * direction.y});
+						expect(tank.targetRange).toEqual(2);
 						expect(tank.strength).toEqual(200);
 						expect(tank.ammo).toEqual(99);
 						expect(model.getMap().walls.length).toEqual(1);
@@ -198,7 +198,7 @@ describe('TankWarsModel', function () {
 						tank = model.getMap().tanks[0];
 						expect(tank.ammo).toEqual(99);
 						expect(tank.status).toEqual('firing');
-						expect(tank.target).toEqual({x: 10 + direction.x, y: 9 + direction.y});
+						expect(tank.targetRange).toEqual(1);
 						expect(tank.strength).toEqual(200);
 
 						expect(model.getMap().walls[0].strength).toEqual(100);

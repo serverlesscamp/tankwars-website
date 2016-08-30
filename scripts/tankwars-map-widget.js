@@ -70,6 +70,19 @@ module.exports = function mapWidget(domElement, scale) {
 				document.getElementById(id).remove();
 			});
 		},
+		addBullet = function (tankElement, targetPosition) {
+			var bulletElement = document.createElement('bullet');
+			bulletElement.addEventListener('animationend', function () {
+				//	bulletElement.remove();
+			});
+			bulletElement.style.top = tankElement.style.top;
+			bulletElement.style.left = tankElement.style.left;
+			bulletElement.style.transform = tankElement.style.transform;
+			bulletElement.style.transformOrigin = Math.floor(scale / 2) + 'px ' + Math.floor(scale / 2) + 'px';
+			bulletElement.style.width = (targetPosition + 1) * scale + 'px';
+			bulletElement.style.height = scale + 'px';
+			domElement.appendChild(bulletElement);
+		},
 		updateTanks = function (tanks) {
 			Object.keys(tanks).forEach(function (tankKey) {
 				var tankElement = getTankElement(tankKey),
@@ -81,6 +94,9 @@ module.exports = function mapWidget(domElement, scale) {
 				tankElement.style.height = (tank.width || 1) * scale + 'px';
 				tankElement.removeAttribute('status');
 				tankElement.setAttribute('status', tank.status);
+				if (tank.status === 'firing') {
+					addBullet(tankElement, tank.targetRange);
+				}
 				smoothRotation(tankElement, directions[tank.direction]);
 				if (tank.strength === 0) {
 					tankElement.classList.add('exploded');

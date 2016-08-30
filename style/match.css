@@ -8,11 +8,25 @@
   border: 15px solid black;
   flex-shrink: 0;
 }
+bullet {
+  position: absolute;
+  z-index: 100;
+  animation-duration: 0.3s;
+  animation-delay: 0.2s;
+  animation-name: bullet-fire;
+  background-size: contain;
+  background-position: right center;
+  background-image: url('../assets/tiles/bullet-right.png');
+  opacity: 0;
+  background-repeat: no-repeat;
+}
 wall {
   position: absolute;
   background-size: cover;
   background-position: center center;
   background-image: url('../assets/tiles/wall-red-100.png');
+  transition: all 0.3s ease-in-out;
+  transition-delay: 0.5s;
   z-index: 5;
 }
 wall[status="75"] {
@@ -112,6 +126,21 @@ tank.exploded::after {
   background-size: contain;
   background-repeat: no-repeat;
   padding-left: 30px;
+}
+
+
+@keyframes bullet-fire {
+  from {
+	  background-position: left center;
+	  opacity: 0;
+  }
+  10% {
+	  opacity: 1;
+  }
+  to {
+	  opacity: 1;
+	  background-position: right center;
+  }
 }
 
 @keyframes hit {

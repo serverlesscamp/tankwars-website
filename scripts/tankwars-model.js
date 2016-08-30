@@ -61,8 +61,10 @@ module.exports = function TankWarsModel(args) {
 		},
 		tryMoving = function (tank, direction) {
 			var movement = movements[direction],
-				wallInFront = wallByPosition(tank.x + movement.x, tank.y + movement.y),
-				tankInFront = tankByPosition(tank.x + movement.x, tank.y + movement.y);
+				x = tank.x + movement.x,
+				y = tank.y + movement.y,
+				wallInFront = wallByPosition(x, y),
+				tankInFront = tankByPosition(x, y);
 			if (wallInFront) {
 				tank.status = 'bump-' + direction;
 				tank.strength = Math.max(0, tank.strength - wallDamage);
@@ -75,6 +77,9 @@ module.exports = function TankWarsModel(args) {
 				tank.strength = Math.max(0, tank.strength - tankDamage);
 				tankInFront.strength = Math.max(0, tankInFront.strength - tankDamage);
 				tankInFront.status = 'bumped';
+			} else if (x < 0 || x >= mapWidth || y < 0 || y >= mapHeight) {
+				tank.status = 'bump-' + direction;
+				tank.strength = Math.max(0, tank.strength - wallDamage);
 			} else {
 				tank.status = 'moving';
 				tank.x += movement.x;
@@ -119,6 +124,9 @@ module.exports = function TankWarsModel(args) {
 	};
 	self.executeCommand = function (tankIndex, command) {
 		var tank = tanks[tankIndex];
+		if (!tank.strength) {
+			return;
+		}
 		tanks.forEach(function (atank) {
 			atank.status = 'static';
 		});

@@ -99,6 +99,21 @@ describe('TankWarsModel', function () {
 						expect(model.getMap().tanks[0].strength).toEqual(100);
 						expect(model.getMap().tanks[0].status).toEqual('moving');
 					});
+					it('ignores commands for destroyed tanks', function () {
+						var model = new TankWarsModel({
+							tanks: [{x: 1, y: 2, strength: 0, direction: direction.name, status: 'xxx'}],
+							walls: [{x: 3, y: 3, strength: 100}],
+							mapWidth: 5,
+							mapHeight: 5
+						});
+						model.executeCommand(0, 'forward');
+						expect(model.getMap().tanks[0].direction).toEqual(direction.name);
+						expect(model.getMap().tanks[0].x).toEqual(1);
+						expect(model.getMap().tanks[0].y).toEqual(2);
+						expect(model.getMap().tanks[0].strength).toEqual(0);
+						expect(model.getMap().tanks[0].status).toEqual('xxx');
+
+					});
 					it('resets status for all other tanks', function () {
 						var model = new TankWarsModel({
 							tanks: [{x: 1, y: 2, strength: 100, direction: direction.name}, { x: 4, y: 4, status: 'moving'}],
@@ -127,6 +142,22 @@ describe('TankWarsModel', function () {
 
 						expect(model.getMap().walls[0].strength).toEqual(100);
 						expect(model.getMap().walls[1].strength).toEqual(50);
+					});
+					it('bumps the tank if it hits the edge of the maze', function () {
+						var model = new TankWarsModel({
+							tanks: [{x: 0, y: 0, strength: 200, direction: direction.name}],
+							walls: [],
+							mapWidth: 1,
+							mapHeight: 1,
+							wallDamage: 30,
+							tankDamage: 50
+						});
+						model.executeCommand(0, 'forward');
+						expect(model.getMap().tanks[0].direction).toEqual(direction.name);
+						expect(model.getMap().tanks[0].x).toEqual(0);
+						expect(model.getMap().tanks[0].y).toEqual(0);
+						expect(model.getMap().tanks[0].status).toEqual('bump-' + direction.name);
+						expect(model.getMap().tanks[0].strength).toEqual(170);
 					});
 					it('destroys a wall if strength less than damage', function () {
 						var model = new TankWarsModel({

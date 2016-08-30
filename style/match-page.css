@@ -1,0 +1,4 @@
+body.match input#advancedOptions { display: none;}
+body.match input#advancedOptions:not(:checked) + .advancedOptions { display: none; }
+
+

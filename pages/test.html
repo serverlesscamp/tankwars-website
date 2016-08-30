@@ -5,21 +5,7 @@ body_class: test
 ---
 
 <div role="matchContainer" class="column">
-	<div>
-		<label>Map width:</label> <input role="option" name="mapWidth" value="30"/>
-		<label>Map height:</label> <input role="option" name="mapHeight" value="20"/>
-	</div>
-	<div>
-		<label>Minimum wall spacing:</label> <input role="option" name="minSpacing" value="3"/>
-		<label>Vertical wall chance</label> <input role="option" data-type="float" name="verticalWallProb" value="0.5" />
-		<label>Horizontal wall chance</label> <input role="option" data-type="float" name="horizontalWallProb" value="0.5" />
-	</div>
-	<div>
-		<label>Wall strength:</label> <input role="option" name="wallStrength" value="200"/>
-		<label>Tank strength:</label> <input role="option" name="tankStrength" value="300" />
-		<label>Wall impact damage:</label> <input role="option" name="wallDamage" value="30"/>
-		<label>Tank impact damage:</label> <input role="option" name="tankDamage" value="50"/>
-	</div>
+	{%include map_options.html %}
 	<div>
 		<label>Number of tanks:</label> <input role="option" name="numTanks" value="2"/>
 		<button role="randomMap">Randomize map</button>
@@ -39,19 +25,7 @@ body_class: test
 				</select>
 			</div>
 			<div><button role="execute">Send</button></div>
-			<div>
-				<h1 class="tank1avatar">Tank 0 status</h1>
-				<li>Strength: <span role="tankStatus" key="0" flag="strength" /></li>
-				<li>Ammo: <span role="tankStatus" key="0" flag="ammo" /></li>
-				<li>Status: <span role="tankStatus" key="0" flag="status" /></li>
-			</div>
-			<div>
-				<h1 class="tank2avatar">Tank 1 status</h1>
-				<li>Strength: <span role="tankStatus" key="1" flag="strength" /></li>
-				<li>Ammo: <span role="tankStatus" key="1" flag="ammo" /></li>
-				<li>Status: <span role="tankStatus" key="1" flag="status" /></li>
-			</div>
-			
+			{%include tank_status.html %}			
 		</div>
 
 	</div>

@@ -1,7 +1,9 @@
 /*global module, require */
 
 var TankWarsModel = require('./tankwars-model'),
-	mapWidget = require('./tankwars-map-widget');
+	mapWidget = require('./tankwars-map-widget'),
+	updateTankStatuses = require('./update-tank-statuses'),
+	packOptions = require('./pack-options');
 
 module.exports = function initMatchPage(document) {
 	'use strict';
@@ -9,34 +11,12 @@ module.exports = function initMatchPage(document) {
 		findElement = function (role) {
 			return document.querySelector('[role=' + role + ']');
 		},
-		optionFields = document.querySelectorAll('[role=option]'),
-		packOptions = function () {
-			var options = {};
-			Object.keys(optionFields).forEach(function (key) {
-				var field = optionFields[key];
-				if (field.getAttribute('data-type') === 'float') {
-					options[field.getAttribute('name')] = parseFloat(field.value);
-				} else {
-					options[field.getAttribute('name')] = parseInt(field.value);
-				}
-			});
-			return options;
-		},
 		commandSelector = findElement('command'),
 		tankSelector = findElement('tankIndex'),
 		updateCommandOptions = function (commands) {
 			commandSelector.innerHTML = '<option>---</option>' + commands.map(function (command) {
 				return '<option>' + command + '</option>';
 			}).join(' ');
-		},
-		updateTankStatuses = function (map) {
-			var statusElements = document.querySelectorAll('[role=tankStatus]');
-			Object.keys(statusElements).forEach(function (index) {
-				var element = statusElements[index],
-					tankKey = parseInt(element.getAttribute('key')),
-					tankProp = element.getAttribute('flag');
-				element.innerHTML = map.tanks[tankKey][tankProp];
-			});
 		},
 		updateTankList = function (tanks) {
 			tankSelector.innerHTML = tanks.map(function (tank, index) {
@@ -53,14 +33,14 @@ module.exports = function initMatchPage(document) {
 		updateCommandOptions(model.getSupportedCommands());
 		updateTankList(map.tanks);
 		matchContainer.classList.add('active');
-		updateTankStatuses(map);
+		updateTankStatuses(map, document);
 	});
 	model.on('change', function (map) {
 		matchMap.updateMap(map);
-		updateTankStatuses(map);
+		updateTankStatuses(map, document);
 	});
 	randomMap.addEventListener('click', function () {
-		model.newMatch(packOptions());
+		model.newMatch(packOptions(document));
 	});
 	matchMap.addEventListener('click', function (e) {
 		var x, y;
@@ -75,6 +55,6 @@ module.exports = function initMatchPage(document) {
 	findElement('execute').addEventListener('click', function () {
 		model.executeCommand(parseInt(tankSelector.value), commandSelector.value);
 	});
-	model.newMatch(packOptions());
+	model.newMatch(packOptions(document));
 };
 

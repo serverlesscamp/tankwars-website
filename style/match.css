@@ -5,15 +5,19 @@
   background-image: linear-gradient(to right, #eee 1px, transparent 1px), linear-gradient(to bottom, #eee 1px, transparent 1px);
   position: relative; 
 }
-[role=wall] {
+wall {
   position: absolute;
-  background-color: red;
+  background-size: cover;
+  background-position: center center;
+  background-image: url('../assets/tiles/wall-red-full.png');
 }
-[role=tank] {
+tank {
   position: absolute;
-  border: 1px solid black;
-  border-right: 2px solid green;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
   transition: all 1s ease-in-out;
+  background-size: cover;
+  background-position: center center;
+  background-image: url('../assets/tiles/green-right.png');
+}
+tank:nth-of-type(1) {
+  background-image: url('../assets/tiles/blue-right.png');
 }

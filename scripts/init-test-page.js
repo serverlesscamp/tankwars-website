@@ -54,7 +54,7 @@ module.exports = function initMatchPage(document) {
 	matchMap.addEventListener('click', function (e) {
 		if (e.target === this) {
 			model.addWall(Math.floor(e.offsetX / scaleMultiplier), Math.floor(e.offsetY / scaleMultiplier));
-		} else if (e.target.getAttribute('role') === 'wall') {
+		} else if (e.target.tagName === 'WALL') {
 			model.removeWall(parseInt(e.target.getAttribute('x')), parseInt(e.target.getAttribute('y')));
 		}
 	});

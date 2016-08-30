@@ -24,20 +24,18 @@ module.exports = function mapWidget(domElement, multiplier) {
 
 		},
 		getTankElement = function (tankKey) {
-			var tankElement = domElement.querySelector('[role=tank][key="' + tankKey + '"]');
+			var tankElement = domElement.querySelector('tank[key="' + tankKey + '"]');
 			if (!tankElement) {
-				tankElement = document.createElement('div');
-				tankElement.setAttribute('role', 'tank');
+				tankElement = document.createElement('tank');
 				tankElement.setAttribute('key', tankKey);
 				domElement.appendChild(tankElement);
 			}
 			return tankElement;
 		},
 		getWallElement = function (x, y) {
-			var wallElement = domElement.querySelector('[role=wall][x="' + x + '"][y="' + y + '"]');
+			var wallElement = domElement.querySelector('wall[x="' + x + '"][y="' + y + '"]');
 			if (!wallElement) {
-				wallElement = document.createElement('div');
-				wallElement.setAttribute('role', 'wall');
+				wallElement = document.createElement('wall');
 				wallElement.setAttribute('x', x);
 				wallElement.setAttribute('y', y);
 				wallElement.id = 'wall' + x + 'x' + y;
@@ -50,7 +48,7 @@ module.exports = function mapWidget(domElement, multiplier) {
 			return wallElement;
 		},
 		updateWalls = function (walls) {
-			var forPurgingDomList = domElement.querySelectorAll('[role=wall]'),
+			var forPurgingDomList = domElement.querySelectorAll('wall'),
 				forPurgingIds = {};
 
 			Object.keys(forPurgingDomList).forEach(function (key) {

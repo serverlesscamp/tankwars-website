@@ -71,6 +71,9 @@ module.exports = function TankWarsModel(args) {
 			tank.status = status;
 			tank.strength = Math.max(0, tank.strength - damage);
 		},
+		outsideMaze = function (x, y) {
+			return x < 0 || x >= mapWidth || y < 0 || y >= mapHeight;
+		},
 		tryMoving = function (tank, direction) {
 			var movement = movements[direction],
 				x = tank.x + movement.x,
@@ -83,7 +86,7 @@ module.exports = function TankWarsModel(args) {
 			} else if (tankInFront) {
 				damageTank(tank, 'bump-' + direction, tankDamage);
 				damageTank(tankInFront, 'bumped', tankDamage);
-			} else if (x < 0 || x >= mapWidth || y < 0 || y >= mapHeight) {
+			} else if (outsideMaze(x, y)) {
 				damageTank(tank, 'bump-' + direction, wallDamage);
 			} else {
 				tank.status = 'moving';
@@ -97,7 +100,7 @@ module.exports = function TankWarsModel(args) {
 			if (!tank.ammo) {
 				return;
 			}
-			for (range = 0; range < weaponRange && !wallTarget && !tankTarget; range++) {
+			for (range = 0; range < weaponRange && !wallTarget && !tankTarget && !outsideMaze(x, y); range++) {
 				x += movement.x;
 				y += movement.y;
 				wallTarget = wallByPosition(x, y);

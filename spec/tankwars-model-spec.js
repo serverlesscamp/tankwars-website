@@ -253,6 +253,23 @@ describe('TankWarsModel', function () {
 
 						expect(model.getMap().walls[0].strength).toEqual(100);
 					});
+					it('does not overshoot the maze boundaries', function () {
+						var model = new TankWarsModel({
+								tanks: [{x: 2, y: 2, strength: 200, ammo: 100, direction: direction.name}],
+								walls: [ ],
+								mapWidth: 5,
+								mapHeight: 5,
+								wallDamage: 30,
+								tankDamage: 50,
+								weaponDamage: 20,
+								weaponRange: 5
+							}), tank;
+						model.executeCommand(0, 'fire');
+						tank = model.getMap().tanks[0];
+						expect(tank.status).toEqual('firing');
+						expect(tank.targetRange).toEqual(3);
+					});
+
 					it('does not shoot if no ammo', function () {
 						var model = new TankWarsModel({
 								tanks: [{x: 10, y: 9, strength: 200, ammo: 0, direction: direction.name}],

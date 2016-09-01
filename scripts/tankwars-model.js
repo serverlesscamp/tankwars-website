@@ -16,15 +16,16 @@ module.exports = function TankWarsModel(args) {
 		randomizer = options.randomizer || require('./randomizer'),
 		walls = options.walls,
 		tanks = options.tanks,
-		mapWidth = options.mapWidth,
-		mapHeight = options.mapHeight,
-		wallStrength = options.wallStrength,
-		maxAmmo = options.maxAmmo,
-		tankStrength = options.tankStrength,
-		wallDamage = options.wallDamage,
-		tankDamage = options.tankDamage,
-		weaponRange = options.weaponRange,
-		weaponDamage = options.weaponDamage,
+		mapWidth,
+		visibility,
+		mapHeight,
+		wallStrength,
+		maxAmmo,
+		tankStrength,
+		wallDamage,
+		tankDamage,
+		weaponRange,
+		weaponDamage,
 		completeMap = function () {
 			return {
 				walls: walls,
@@ -116,6 +117,18 @@ module.exports = function TankWarsModel(args) {
 			} else if (tankTarget) {
 				damageTank(tankTarget, 'hit', weaponDamage);
 			}
+		},
+		loadOptions = function (options) {
+			mapWidth = options.mapWidth || 32;
+			mapHeight = options.mapHeight || 24;
+			wallStrength = options.wallStrength || 100;
+			maxAmmo = options.maxAmmo || 100;
+			tankStrength = options.tankStrength || 200;
+			wallDamage = options.wallDamage || 30;
+			tankDamage = options.tankDamage || 50;
+			weaponRange = options.weaponRange || 5;
+			weaponDamage = options.weaponDamage || 20;
+			visibility = options.visibility || 5;
 		};
 	self.newMatch = function (options) {
 		var numTanks = options.numTanks || 2,
@@ -123,15 +136,7 @@ module.exports = function TankWarsModel(args) {
 			horizontalWallProb = options.horizontalWallProb || 0.5,
 			minSpacing = options.minSpacing || 3;
 
-		mapWidth = options.mapWidth || 32;
-		mapHeight = options.mapHeight || 24;
-		wallStrength = options.wallStrength || 100;
-		maxAmmo = options.maxAmmo || 100;
-		tankStrength = options.tankStrength || 200;
-		wallDamage = options.wallDamage || 30;
-		tankDamage = options.tankDamage || 50;
-		weaponRange = options.weaponRange || 5;
-		weaponDamage = options.weaponDamage || 20;
+		loadOptions(options);
 
 		walls = mazeBuilder(mapWidth, mapHeight, horizontalWallProb, verticalWallProb, minSpacing, randomizer).map(makeWall);
 		tanks = randomizer.shuffle(freeSpace(walls, mapWidth, mapHeight)).slice(-1 * numTanks).map(makeTank);
@@ -180,4 +185,36 @@ module.exports = function TankWarsModel(args) {
 
 		self.emit('change', completeMap());
 	};
+	self.getVisibleMapForTank = function (tankIndex) {
+		var tank = tanks[tankIndex],
+			isEnemy = function (val) {
+				return tank !== val;
+			},
+			distance = function (point1, point2) {
+				return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
+			},
+			isVisible = function (point) {
+				return distance(tank, point) < visibility;
+			},
+			getEnemyInfo = function (enemyTank) {
+				if (isVisible(enemyTank)) {
+					return enemyTank;
+				} else {
+					return {strength: enemyTank.strength};
+				}
+			};
+		return {
+			mapWidth: mapWidth,
+			mapHeight: mapHeight,
+			wallDamage: wallDamage,
+			tankDamage: tankDamage,
+			weaponDamage: weaponDamage,
+			visibility: visibility,
+			weaponRange: weaponRange,
+			you: tanks[tankIndex],
+			enemies: tanks.filter(isEnemy).map(getEnemyInfo),
+			walls: walls.filter(isVisible)
+		};
+	};
+	loadOptions(options);
 };

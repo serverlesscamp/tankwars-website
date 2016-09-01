@@ -596,4 +596,56 @@ describe('TankWarsModel', function () {
 			});
 		});
 	});
+	describe('getVisibleMapForTank', function () {
+		var model;
+
+		beforeEach(function () {
+			model = new TankWarsModel({
+				tanks: [
+						{x: 1, y: 2, strength: 200, ammo: 111, direction: 'top', status: 'hit'},
+						{x: 3, y: 2, strength: 30, ammo: 100, direction: 'top', status: 'moving'},
+						{x: 7, y: 7, strength: 50, ammo: 100, direction: 'bottom', status: 'moving'}
+						],
+				walls: [{x: 3, y: 3, strength: 100}, {x: 10, y: 10, strength: 50}],
+				mapWidth: 20,
+				mapHeight: 15,
+				visibility: 4,
+				wallDamage: 30,
+				tankDamage: 50,
+				weaponDamage: 20,
+				weaponRange: 5,
+				additionalArg: 'some value'
+			});
+		});
+		it('includes full information about the subject tank', function () {
+			var result = model.getVisibleMapForTank(0);
+			expect(result.you).toEqual({x: 1, y: 2, strength: 200, ammo: 111, direction: 'top', status: 'hit'});
+		});
+		it('includes generic map arguments', function () {
+			var result = model.getVisibleMapForTank(0);
+			expect(result).toEqual(jasmine.objectContaining({
+				mapWidth: 20,
+				mapHeight: 15,
+				visibility: 4,
+				wallDamage: 30,
+				tankDamage: 50,
+				weaponDamage: 20,
+				weaponRange: 5
+			}));
+			expect(result.additionalArg).not.toBeDefined();
+		});
+		it('includes walls within the visibility range', function () {
+			var result = model.getVisibleMapForTank(0);
+			expect(result.walls).toEqual([{x: 3, y: 3, strength: 100}]);
+		});
+		it('includes full information on other tanks within the visibility range', function () {
+			var result = model.getVisibleMapForTank(0);
+			expect(result.enemies.length).toEqual(2);
+			expect(result.enemies[0]).toEqual({x: 3, y: 2, strength: 30, ammo: 100, direction: 'top', status: 'moving'});
+		});
+		it('includes only summary info for the tanks outside the visibility range', function () {
+			var result = model.getVisibleMapForTank(0);
+			expect(result.enemies[1]).toEqual({strength: 50});
+		});
+	});
 });

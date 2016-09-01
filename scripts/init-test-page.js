@@ -12,16 +12,21 @@ module.exports = function initMatchPage(document) {
 			return document.querySelector('[role=' + role + ']');
 		},
 		commandSelector = findElement('command'),
-		tankSelector = findElement('tankIndex'),
+		manualTankSelector = findElement('tankManual'),
+		apiTankSelector = findElement('tankApi'),
 		updateCommandOptions = function (commands) {
 			commandSelector.innerHTML = '<option>---</option>' + commands.map(function (command) {
 				return '<option>' + command + '</option>';
 			}).join(' ');
 		},
 		updateTankList = function (tanks) {
-			tankSelector.innerHTML = tanks.map(function (tank, index) {
+			manualTankSelector.innerHTML = tanks.map(function (tank, index) {
 				return '<option value="' + index + '"> Tank ' + index + '</option>';
 			}).join(' ');
+			apiTankSelector.innerHTML = tanks.map(function (tank, index) {
+				return '<option value="' + index + '"> Tank ' + index + '</option>';
+			}).join(' ');
+
 		},
 		randomMap = findElement('randomMap'),
 		matchContainer = findElement('matchContainer'),
@@ -53,7 +58,7 @@ module.exports = function initMatchPage(document) {
 		}
 	});
 	findElement('execute').addEventListener('click', function () {
-		model.executeCommand(parseInt(tankSelector.value), commandSelector.value);
+		model.executeCommand(parseInt(manualTankSelector.value), commandSelector.value);
 	});
 	model.newMatch(packOptions(document));
 };

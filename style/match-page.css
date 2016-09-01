@@ -1,4 +1,6 @@
-body.match input#advancedOptions { display: none;}
-body.match input#advancedOptions:not(:checked) + .advancedOptions { display: none; }
+input#advancedOptions { display: none;}
+input#advancedOptions:not(:checked) + .advancedOptions { display: none; }
 
-
+.tankstatus { display: inline;}
+.tankstatus ul, .tankstatus ul li { display: inline; padding-left: 0; margin-left: 0;}
+.tankstatus ul li { list-style: none; }

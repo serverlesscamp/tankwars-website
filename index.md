@@ -1,7 +1,6 @@
 ---
 layout: default
 ---
-
 #Tankwars
 
 * [Run a match](pages/match.html)

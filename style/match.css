@@ -3,9 +3,8 @@
 
 [role=matchMap] {
   background-image: url('../assets/tiles/background-orange.png');
-  position: relative; 
+  position: relative;
   z-index: 0;
-  border: 15px solid black;
   flex-shrink: 0;
 }
 bullet {
@@ -85,7 +84,7 @@ tank[status="bump-top"] {
   animation-duration: 1s;
   animation-name: bump-top;
 }
-tank[status="bump-top"]::after, tank[status="bump-left"]::after, tank[status="bump-right"]::after, tank[status="bump-bottom"]::after, 
+tank[status="bump-top"]::after, tank[status="bump-left"]::after, tank[status="bump-right"]::after, tank[status="bump-bottom"]::after,
 tank[status="bumped"]::after, tank[status="hit"]::after {
   content: '';
   position: absolute;
@@ -120,14 +119,14 @@ tank.exploded::after {
   background-position: left center;
   background-size: contain;
   background-repeat: no-repeat;
-  padding-left: 30px;
+  padding-left: 40px;
 }
 .tank2avatar {
   background-image: url('../assets/tiles/tank-blue-small.png');
   background-position: left center;
   background-size: contain;
   background-repeat: no-repeat;
-  padding-left: 30px;
+  padding-left: 40px;
 }
 
 
@@ -315,4 +314,3 @@ tank.exploded::after {
     background-image: url('../assets/tiles/exp-3.png');
   }
 }
-

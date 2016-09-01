@@ -3,31 +3,117 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  margin-left: 1em;
-  margin-right: 1em;
+  margin: 0;
 }
+
+@font-face {
+  font-family: 'fff_forward';
+  src: url('../assets/fonts/fff-forward.regular-webfont.woff2') format('woff2'),
+       url('../assets/fonts/fff-forward.regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 header {
-  border-bottom: 1px solid black;
+  border-bottom: 3px solid #444;
   flex-shrink: 0;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 1em;
-  padding-bottom: 1em;
+  padding: 0 20px;
+  height: 60px;
+  line-height: 60px;
+  background: #CCC;
+  font-family: 'fff_forward';
+  text-shadow: 0 -1px rgba(255, 255, 255, .3);
 }
+
+header .site-title {
+  padding: 0 40px;
+  background: url(../assets/tiles/tank-blue-0.png) center left no-repeat, url(../assets/tiles/tank-green-0-reverse.png) center right no-repeat;
+  background-size: 30px 30px;
+}
+
 header nav {
   display: inline-block;
 }
+
+header a {
+  color: #444;
+  text-decoration: none;
+  transition: color ease-in .3s;
+}
+
+header nav a {
+  margin: 0 0 0 10px;
+  text-decoration: underline;;
+}
+
+header a:hover {
+  color: #000;
+}
+
 content {
   flex-grow: 1;
   flex-shrink: 0;
   display: block;
 }
+
+a {
+  color: #1b70b1;
+  transition: color ease-in .3s;
+}
+
+a:hover {
+  color: #308fd8;
+}
+
+content {
+  overflow: hidden;
+  padding: 0 20px;
+}
+
+content > p {
+  margin-top: 100px;
+  color: #444;
+  font-family: fff_forward;
+  font-size: 24px;
+  text-align: center;
+}
+
+content > ul {
+  margin: 0 auto;
+  padding: 0;
+  width: 220px;
+  list-style: none;
+  text-align: center;
+  font-family: fff_forward;
+}
+
+content > ul li {
+  margin: 10px 0;
+}
+
+content > ul li a {
+  padding: 0 40px;
+}
+
+content > ul li a:hover {
+  background: url(../assets/tiles/tank-blue-0.png) center left no-repeat, url(../assets/tiles/tank-green-0-reverse.png) center right no-repeat;
+  background-size: 30px 30px;
+}
+
 footer {
-  border-top: 1px solid black;
   margin-top: 1em;
-  padding-top: 1em;
+  padding: 0 20px;
+  height: 40px;
+  line-height: 40px;
+  border-top: 3px solid #444;
   flex-shrink: 0;
+  font-family: fff_forward;
+  font-size: 10px;
+  background: #e4eff3;
 }
 
 .row {

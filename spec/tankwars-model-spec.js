@@ -84,7 +84,7 @@ describe('TankWarsModel', function () {
 
 	describe('tank commands', function () {
 
-		['turn-left', 'turn-right', 'forward', 'reverse', 'fire'].forEach(function (command) {
+		['turn-left', 'turn-right', 'forward', 'reverse', 'fire', 'pass'].forEach(function (command) {
 			it('ignores ' + command +  ' command for destroyed tanks', function () {
 				var model = new TankWarsModel({
 					tanks: [{x: 1, y: 2, strength: 0, direction: 'left', status: 'xxx'}],
@@ -92,12 +92,29 @@ describe('TankWarsModel', function () {
 					mapWidth: 5,
 					mapHeight: 5
 				});
-				model.executeCommand(0, 'command');
+				model.executeCommand(0, command);
 				expect(model.getMap().tanks[0].direction).toEqual('left');
 				expect(model.getMap().tanks[0].x).toEqual(1);
 				expect(model.getMap().tanks[0].y).toEqual(2);
 				expect(model.getMap().tanks[0].strength).toEqual(0);
 				expect(model.getMap().tanks[0].status).toEqual('xxx');
+			});
+		});
+		describe('pass', function () {
+			it('does nothing even for alive tanks', function () {
+				var model = new TankWarsModel({
+					tanks: [{x: 1, y: 2, strength: 0, direction: 'left', status: 'xxx'}],
+					walls: [{x: 3, y: 3, strength: 100}],
+					mapWidth: 5,
+					mapHeight: 5
+				});
+				model.executeCommand(0, 'pass');
+				expect(model.getMap().tanks[0].direction).toEqual('left');
+				expect(model.getMap().tanks[0].x).toEqual(1);
+				expect(model.getMap().tanks[0].y).toEqual(2);
+				expect(model.getMap().tanks[0].strength).toEqual(0);
+				expect(model.getMap().tanks[0].status).toEqual('xxx');
+
 			});
 		});
 		[{name: 'left', x: -1, y: 0}, {name: 'right', x: 1, y: 0}, {name: 'top', x: 0, y: -1}, {name: 'bottom', x: 0, y: 1}].forEach(function (direction) {
@@ -751,6 +768,4 @@ describe('TankWarsModel', function () {
 			expect(model.isOver()).toBeTruthy();
 		});
 	});
-
-
 });

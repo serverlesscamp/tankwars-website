@@ -165,7 +165,7 @@ module.exports = function TankWarsModel(args) {
 		return completeMap();
 	};
 	self.getSupportedCommands = function () {
-		return ['turn-left', 'turn-right', 'forward', 'reverse', 'fire'];
+		return ['turn-left', 'turn-right', 'forward', 'reverse', 'fire', 'pass'];
 	};
 	self.executeCommand = function (tankIndex, command) {
 		var tank = tanks[tankIndex];

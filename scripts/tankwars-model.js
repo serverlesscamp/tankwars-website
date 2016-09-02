@@ -1,7 +1,8 @@
 /*global module, require */
 var makeEmitter = require('./mini-emit'),
 	uuid = require('uuid'),
-	freeSpace = require('./free-space');
+	freeSpace = require('./free-space'),
+	grow = require('./grow');
 module.exports = function TankWarsModel(args) {
 	'use strict';
 	var self = makeEmitter(this),
@@ -15,8 +16,8 @@ module.exports = function TankWarsModel(args) {
 			right: {x: 1, y: 0}
 		},
 		randomizer = options.randomizer || require('./randomizer'),
-		walls = options.walls,
-		tanks = options.tanks,
+		walls = options.walls || [],
+		tanks = options.tanks || [],
 		mapWidth,
 		matchId,
 		visibility,
@@ -28,6 +29,7 @@ module.exports = function TankWarsModel(args) {
 		tankDamage,
 		weaponRange,
 		weaponDamage,
+		suddenDeathFields = options.suddenDeathFields || [],
 		suddenDeath,
 		completeMap = function () {
 			return {
@@ -37,7 +39,8 @@ module.exports = function TankWarsModel(args) {
 				walls: walls,
 				tanks: tanks,
 				wallStrength: wallStrength,
-				suddenDeath: suddenDeath
+				suddenDeath: suddenDeath,
+				suddenDeathFields: suddenDeathFields
 			};
 		},
 		wallByPosition = function (x, y) {
@@ -49,6 +52,9 @@ module.exports = function TankWarsModel(args) {
 			return tanks.find(function (tank) {
 				return tank.x === x && tank.y === y;
 			});
+		},
+		tankByPoint = function (point) {
+			return tankByPosition(point.x, point.y);
 		},
 		makeWall = function (wallPosition) {
 			return {
@@ -134,11 +140,19 @@ module.exports = function TankWarsModel(args) {
 			weaponRange = options.weaponRange || 5;
 			weaponDamage = options.weaponDamage || 20;
 			visibility = options.visibility || 5;
-			suddenDeath = options.suddenDeath || 1000;
+			suddenDeath = options.suddenDeath === 0 ? 0 : (options.suddenDeath || 1000);
+		},
+		notFalsy = function (t) {
+			return t;
 		},
 		suddenDeathTurn = function () {
 			if (suddenDeath > 0) {
 				suddenDeath--;
+			} else {
+				suddenDeathFields = grow(suddenDeathFields, mapWidth, mapHeight);
+				suddenDeathFields.map(tankByPoint).filter(notFalsy).forEach(function (tankTarget) {
+					damageTank(tankTarget, 'hit', weaponDamage);
+				});
 			}
 		};
 	self.newMatch = function (options) {
@@ -151,6 +165,7 @@ module.exports = function TankWarsModel(args) {
 		loadOptions(options);
 		walls = mazeBuilder(mapWidth, mapHeight, horizontalWallProb, verticalWallProb, minSpacing, randomizer).map(makeWall);
 		tanks = randomizer.shuffle(freeSpace(walls, mapWidth, mapHeight)).slice(-1 * numTanks).map(makeTank);
+		suddenDeathFields = [];
 		self.emit('newMatch', completeMap());
 	};
 	self.getMatchId = function () {
@@ -230,7 +245,8 @@ module.exports = function TankWarsModel(args) {
 			you: tanks[tankIndex],
 			enemies: tanks.filter(isEnemy).map(getEnemyInfo),
 			walls: walls.filter(isVisible),
-			suddenDeath: suddenDeath
+			suddenDeath: suddenDeath,
+			suddenDeathFields: suddenDeathFields
 		};
 	};
 	self.alive = function (tankIndex) {

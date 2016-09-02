@@ -49,18 +49,20 @@ describe('TankWarsModel', function () {
 			expect(map.tanks[2].direction).toEqual('right');
 
 		});
-		it('resets sudden death counter', function () {
+		it('resets sudden death', function () {
 			var model = new TankWarsModel({suddenDeath: 5}),
 				result;
 			model.newMatch({
 				numTanks: 5,
 				mapWidth: 50,
 				mapHeight: 20,
-				suddenDeath: 100
+				suddenDeath: 100,
+				suddenDeathFields: [{x: 1, y: 2}]
 			});
 			result = model.getMap();
 
 			expect(result.suddenDeath).toEqual(100);
+			expect(result.suddenDeathFields).toEqual([]);
 		});
 		it('places tanks into random empty spots on the map', function () {
 			var model, map;
@@ -660,6 +662,7 @@ describe('TankWarsModel', function () {
 				weaponDamage: 20,
 				weaponRange: 5,
 				suddenDeath: 1000,
+				suddenDeathFields: [{x: 1, y: 3}],
 				additionalArg: 'some value'
 			});
 		});
@@ -693,6 +696,10 @@ describe('TankWarsModel', function () {
 		it('includes only summary info for the tanks outside the visibility range', function () {
 			var result = model.getVisibleMapForTank(0);
 			expect(result.enemies[1]).toEqual({strength: 50});
+		});
+		it('includes sudden death fields', function () {
+			expect(model.getVisibleMapForTank(0).suddenDeathFields).toEqual([{x: 1, y: 3}]);
+
 		});
 	});
 	describe('alive', function () {
@@ -796,6 +803,74 @@ describe('TankWarsModel', function () {
 				additionalArg: 'some value'
 			});
 			expect(model.isOver()).toBeTruthy();
+		});
+	});
+	describe('sudden death', function () {
+		it('does nothing if sudden death counter is positive', function () {
+			var model = new TankWarsModel({
+					tanks: [{x: 1, y: 2, strength: 5, direction: 'left', status: 'xxx'}],
+					walls: [{x: 3, y: 3, strength: 100}],
+					mapWidth: 5,
+					mapHeight: 5,
+					suddenDeath: 1
+				});
+			model.executeCommand(0, 'pass');
+			expect(model.getMap().suddenDeathFields).toEqual([]);
+		});
+		it('marks corners during sudden death if no other fields are marked', function () {
+			var model = new TankWarsModel({
+					tanks: [{x: 1, y: 2, strength: 5, direction: 'left', status: 'xxx'}],
+					walls: [{x: 3, y: 3, strength: 100}],
+					mapWidth: 5,
+					mapHeight: 4,
+					suddenDeath: 0
+				});
+			model.executeCommand(0, 'pass');
+			expect(model.getMap().suddenDeathFields).toEqual([{x: 0, y: 0}, {x: 0, y: 3}, {x: 4, y: 0}, {x: 4, y: 3}]);
+			expect(model.getMap().suddenDeath).toEqual(0);
+		});
+		it('causes weapon damage to any tanks caught in sudden death fields', function () {
+			var model = new TankWarsModel({
+					tanks: [{x: 1, y: 2, strength: 5, direction: 'left', status: 'xxx'},
+							{x: 4, y: 3, strength: 100, direction: 'top'}],
+					mapWidth: 5,
+					mapHeight: 4,
+					suddenDeath: 0,
+					weaponDamage: 20
+				});
+			model.executeCommand(0, 'pass');
+			expect(model.getMap().tanks[0].strength).toEqual(5);
+			expect(model.getMap().tanks[1].strength).toEqual(80);
+			expect(model.getMap().tanks[1].status).toEqual('hit');
+		});
+		it('destroys a tank if strength less than damage', function () {
+			var model = new TankWarsModel({
+					tanks: [{x: 4, y: 3, strength: 5, direction: 'left', status: 'xxx'}],
+					walls: [{x: 2, y: 2, strength: 100}],
+					mapWidth: 5,
+					mapHeight: 4,
+					suddenDeath: 0,
+					weaponDamage: 20
+				});
+			model.executeCommand(0, 'pass');
+			expect(model.getMap().tanks[0].strength).toEqual(0);
+		});
+		it('expands to nearby fields if already in sudden death', function () {
+			var model = new TankWarsModel({
+					tanks: [{x: 1, y: 2, strength: 5, direction: 'left', status: 'xxx'}],
+					walls: [{x: 3, y: 3, strength: 100}],
+					mapWidth: 5,
+					mapHeight: 4,
+					suddenDeath: 0,
+					suddenDeathFields: [{x: 2, y: 2}]
+				});
+			model.executeCommand(0, 'pass');
+			expect(model.getMap().suddenDeathFields).toEqual([
+					{x: 1, y: 1}, {x: 1, y: 2}, {x: 1, y: 3},
+					{x: 2, y: 1}, {x: 2, y: 2}, {x: 2, y: 3},
+					{x: 3, y: 1}, {x: 3, y: 2}, {x: 3, y: 3}
+			]);
+			expect(model.getMap().suddenDeath).toEqual(0);
 		});
 	});
 });

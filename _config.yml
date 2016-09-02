@@ -9,6 +9,5 @@ markdown: kramdown
 exclude: ['*.sh', 'template']
 scripts: ['compiled.js'] # ['scripts/tw.js', 'scripts/promising-xhr.js', 'scripts/mini-emit.js', 'scripts/tankwars-client-api.js', 'scripts/tankwars-model.js', 'scripts/site.js']
 social_header: "/assets/camp.png"
-s3_bucket: S3_BUCKET
-cloudfront_dist: CLOUDFRONT_DIST
-api_endpoint: 'https://akyi4n0g5k.execute-api.us-east-1.amazonaws.com/dev'
+s3_bucket: tankwars.serverless.camp
+cloudfront_dist: E1D2P34CXUH940

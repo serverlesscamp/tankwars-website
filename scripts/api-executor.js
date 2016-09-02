@@ -4,6 +4,14 @@ module.exports = function ApiExecutor(model, appendLog) {
 	'use strict';
 	var self = this;
 	self.timeout = 2000;
+	self.info = function (url) {
+		return promisingXhr({
+			url: url + '/info',
+			method: 'GET'
+		}).then(function (response) {
+			return response.body;
+		});
+	};
 	self.execute = function (tankIndex, url) {
 		var toSend = model.getVisibleMapForTank(tankIndex),
 			tankLabel = (tankIndex + 1);

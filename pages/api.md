@@ -70,6 +70,10 @@ Your endpoint will get an `application/json` POST request, containing the follow
 };
 {%endhighlight%}
 
+### Coordinate space
+
+The map is a 0-based matrix, where [0,0] is the upper left corner. The map width and height are in the `mapWidth` and `mapHeight` keys of the request body.
+
 ### Enemy tanks
 
 The information on enemy tanks will be in the `enemies` key of the map your command endpoint receives, and your tank will be in the `you` key. You can see full tank info for yourself and tanks in your visibility zone. You can only see a summary for far-away tanks.
@@ -95,7 +99,7 @@ The information on enemy tanks will be in the `enemies` key of the map your comm
 
 ### Walls
 
-* you can only see walls in your visibility zone
+You can only see walls in your visibility zone:
 
 {%highlight js%}
 { 
@@ -104,6 +108,8 @@ The information on enemy tanks will be in the `enemies` key of the map your comm
   strength: int 
 }
 {%endhighlight %}
+
+*Note*: trying to move outside the map space will cause damage equal to wall damage. Border walls (around the entire map) are not in this list, but assume that anything outside [0,0] -> [mapWidth, mapHeight] is a wall.
 
 ## Example request {#example-request}
 

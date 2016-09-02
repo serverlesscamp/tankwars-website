@@ -32,6 +32,14 @@ module.exports = function initMatchPage(document) {
 					runCommand();
 				}
 			});
+		},
+		getInfo = function (url, fieldRole) {
+			var field = findElement(fieldRole);
+			apiExecutor.info(url).then(function (info) {
+				field.innerHTML = (info.name + ' <span>' + info.owner + '</span>');
+			}).catch(function () {
+				field.innerHTML = 'Unknown';
+			});
 		};
 
 	tankStatusWidget(document.querySelectorAll('[role=tankStatus]'), model);
@@ -41,6 +49,8 @@ module.exports = function initMatchPage(document) {
 		findElement('matchId').innerHTML = map.matchId;
 		matchContainer.classList.add('active');
 		log.clearLog();
+		getInfo(tank1Api.value, 'tank1Name');
+		getInfo(tank2Api.value, 'tank2Name');
 		runCommand();
 	});
 

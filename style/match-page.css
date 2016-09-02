@@ -89,3 +89,19 @@ input#advancedOptions:not(:checked) + .advancedOptions { display: none; }
 
 input#showLog { display: none;}
 input#showLog:not(:checked) + .log { display: none; }
+
+
+.tank1avatar {
+  background-image: url('../assets/tiles/tank-green-small.png');
+  background-position: left center;
+  background-size: 60px 60px;
+  background-repeat: no-repeat;
+  padding-left: 60px;
+}
+.tank2avatar {
+  background-image: url('../assets/tiles/tank-blue-small.png');
+  background-position: left center;
+  background-size: 60px 60px;
+  background-repeat: no-repeat;
+  padding-left: 60px;
+}

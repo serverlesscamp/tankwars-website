@@ -18,7 +18,7 @@ body_class: test
 
 	<div class="column show-when-active">
 		<div>
-			<label>Use API URL:</label> <input role="option" name="apiUrl" placeholder="https://abc/def" />
+			<label>Use API URL:</label> <input role="apiUrl" placeholder="https://abc/def" />
 			<label>for</label>
 			<select role="tankApi"> 
 			</select>
@@ -38,6 +38,7 @@ body_class: test
 			{%include tank_status.html %}			
 		</div>
 		<div role="matchMap"></div>
+		<textarea role="log"></textarea>
 	</div>
 </div>
 

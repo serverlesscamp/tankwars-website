@@ -38,3 +38,7 @@ footer {
   display: flex;
   flex-direction: column;
 }
+
+code {
+  white-space: pre-wrap;
+}

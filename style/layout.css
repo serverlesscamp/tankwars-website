@@ -74,7 +74,7 @@ content {
   padding: 0 20px;
 }
 
-content > p {
+.home content > p {
   margin-top: 100px;
   color: #444;
   font-family: fff_forward;
@@ -82,7 +82,7 @@ content > p {
   text-align: center;
 }
 
-content > ul {
+.home content > ul {
   margin: 0 auto;
   padding: 0;
   width: 220px;
@@ -91,15 +91,15 @@ content > ul {
   font-family: fff_forward;
 }
 
-content > ul li {
+.home content > ul li {
   margin: 10px 0;
 }
 
-content > ul li a {
+.home content > ul li a {
   padding: 0 40px;
 }
 
-content > ul li a:hover {
+.home content > ul li a:hover {
   background: url(../assets/tiles/tank-blue-0.png) center left no-repeat, url(../assets/tiles/tank-green-0-reverse.png) center right no-repeat;
   background-size: 30px 30px;
 }

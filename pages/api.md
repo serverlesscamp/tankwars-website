@@ -1,6 +1,7 @@
 ---
 layout: default
 title: API
+body_class: api
 ---
 
 # API 
@@ -14,6 +15,7 @@ Your `/info` URL API will receive a GET request. Reply with JSON:
   name: string, /* tank name */
   owner: string /* tank author/owner */
 }
+```
 
 ## Tank command 
 
@@ -78,7 +80,7 @@ Reply with JSON:
 }
 ```
 
-### Example request
+# Example request
 ```
 {
   "mapWidth": 30,
@@ -121,3 +123,7 @@ Reply with JSON:
   "matchId": "368f865a-0143-42ac-9a42-7d8b30f482b7"
 }
 ```
+
+# Example code
+
+[Serverless Camp Example Tanks](https://github.com/serverlesscamp/tankwars-example-tanks)

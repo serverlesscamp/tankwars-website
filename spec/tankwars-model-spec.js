@@ -13,75 +13,89 @@ describe('TankWarsModel', function () {
 			return array.slice().reverse();
 		});
 	});
-	it('builds a map when it newMatchs, with tanks and walls', function () {
-		var model = new TankWarsModel(),
-			result;
-		model.newMatch({
-			numTanks: 5,
-			mapWidth: 50,
-			mapHeight: 20
-		});
-		result = model.getMap();
+	describe('newMatch', function () {
+		it('builds a map when it newMatchs, with tanks and walls', function () {
+			var model = new TankWarsModel(),
+				result;
+			model.newMatch({
+				numTanks: 5,
+				mapWidth: 50,
+				mapHeight: 20
+			});
+			result = model.getMap();
 
-		expect(result.tanks.length).toEqual(5);
-		expect(result.width).toEqual(50);
-		expect(result.height).toEqual(20);
-	});
-	it('puts tanks on random orientation', function () {
-		var model, map;
-		randomizer.shuffle.and.callFake(function (array) {
-			array.push(array.shift());
-			return array;
+			expect(result.tanks.length).toEqual(5);
+			expect(result.width).toEqual(50);
+			expect(result.height).toEqual(20);
 		});
-		model = new TankWarsModel({
-			randomizer: randomizer,
-			mazeBuilder: mazeBuilder
-		});
-		model.newMatch({
-			numTanks: 3,
-			mapWidth: 3,
-			mapHeight: 2
-		});
-		map = model.getMap();
-		expect(map.tanks[0].direction).toEqual('left');
-		expect(map.tanks[1].direction).toEqual('bottom');
-		expect(map.tanks[2].direction).toEqual('right');
+		it('puts tanks on random orientation', function () {
+			var model, map;
+			randomizer.shuffle.and.callFake(function (array) {
+				array.push(array.shift());
+				return array;
+			});
+			model = new TankWarsModel({
+				randomizer: randomizer,
+				mazeBuilder: mazeBuilder
+			});
+			model.newMatch({
+				numTanks: 3,
+				mapWidth: 3,
+				mapHeight: 2
+			});
+			map = model.getMap();
+			expect(map.tanks[0].direction).toEqual('left');
+			expect(map.tanks[1].direction).toEqual('bottom');
+			expect(map.tanks[2].direction).toEqual('right');
 
-	});
-	it('places tanks into random empty spots on the map', function () {
-		var model, map;
-		/*  012
-		 * 0.x.
-		 * 1x..
-		 */
-		model = new TankWarsModel({
-			randomizer: randomizer,
-			mazeBuilder: mazeBuilder
 		});
-		model.newMatch({
-			numTanks: 2,
-			mapWidth: 3,
-			mapHeight: 2
-		});
-		map = model.getMap();
-		expect(map.tanks[0].x).toEqual(1);
-		expect(map.tanks[0].y).toEqual(1);
+		it('resets sudden death counter', function () {
+			var model = new TankWarsModel({suddenDeath: 5}),
+				result;
+			model.newMatch({
+				numTanks: 5,
+				mapWidth: 50,
+				mapHeight: 20,
+				suddenDeath: 100
+			});
+			result = model.getMap();
 
-		expect(map.tanks[1].x).toEqual(0);
-		expect(map.tanks[1].y).toEqual(0);
-	});
-	it('dispatches newMatch when a match is initialized', function () {
-		var model = new TankWarsModel(),
-			listener = jasmine.createSpy();
-		model.on('newMatch', listener);
-		model.newMatch({
-			numTanks: 2,
-			mapWidth: 3,
-			mapHeight: 2
+			expect(result.suddenDeath).toEqual(100);
 		});
-		expect(listener).toHaveBeenCalledWith(model.getMap());
-	});
+		it('places tanks into random empty spots on the map', function () {
+			var model, map;
+			/*  012
+			 * 0.x.
+			 * 1x..
+			 */
+			model = new TankWarsModel({
+				randomizer: randomizer,
+				mazeBuilder: mazeBuilder
+			});
+			model.newMatch({
+				numTanks: 2,
+				mapWidth: 3,
+				mapHeight: 2
+			});
+			map = model.getMap();
+			expect(map.tanks[0].x).toEqual(1);
+			expect(map.tanks[0].y).toEqual(1);
 
+			expect(map.tanks[1].x).toEqual(0);
+			expect(map.tanks[1].y).toEqual(0);
+		});
+		it('dispatches newMatch', function () {
+			var model = new TankWarsModel(),
+				listener = jasmine.createSpy();
+			model.on('newMatch', listener);
+			model.newMatch({
+				numTanks: 2,
+				mapWidth: 3,
+				mapHeight: 2
+			});
+			expect(listener).toHaveBeenCalledWith(model.getMap());
+		});
+	});
 	describe('tank commands', function () {
 
 		['turn-left', 'turn-right', 'forward', 'reverse', 'fire', 'pass'].forEach(function (command) {
@@ -90,7 +104,8 @@ describe('TankWarsModel', function () {
 					tanks: [{x: 1, y: 2, strength: 0, direction: 'left', status: 'xxx'}],
 					walls: [{x: 3, y: 3, strength: 100}],
 					mapWidth: 5,
-					mapHeight: 5
+					mapHeight: 5,
+					suddenDeath: 10
 				});
 				model.executeCommand(0, command);
 				expect(model.getMap().tanks[0].direction).toEqual('left');
@@ -98,7 +113,21 @@ describe('TankWarsModel', function () {
 				expect(model.getMap().tanks[0].y).toEqual(2);
 				expect(model.getMap().tanks[0].strength).toEqual(0);
 				expect(model.getMap().tanks[0].status).toEqual('xxx');
+				expect(model.getMap().suddenDeath).toEqual(10);
 			});
+
+			it(command +  ' decreases sudden death counter', function () {
+				var model = new TankWarsModel({
+					tanks: [{x: 1, y: 2, strength: 10, direction: 'left', status: 'xxx'}],
+					walls: [{x: 3, y: 3, strength: 100}],
+					mapWidth: 5,
+					mapHeight: 5,
+					suddenDeath: 10
+				});
+				model.executeCommand(0, command);
+				expect(model.getMap().suddenDeath).toEqual(9);
+			});
+
 		});
 		describe('pass', function () {
 			it('does nothing even for alive tanks', function () {
@@ -114,7 +143,6 @@ describe('TankWarsModel', function () {
 				expect(model.getMap().tanks[0].y).toEqual(2);
 				expect(model.getMap().tanks[0].strength).toEqual(0);
 				expect(model.getMap().tanks[0].status).toEqual('xxx');
-
 			});
 		});
 		[{name: 'left', x: -1, y: 0}, {name: 'right', x: 1, y: 0}, {name: 'top', x: 0, y: -1}, {name: 'bottom', x: 0, y: 1}].forEach(function (direction) {
@@ -631,6 +659,7 @@ describe('TankWarsModel', function () {
 				tankDamage: 50,
 				weaponDamage: 20,
 				weaponRange: 5,
+				suddenDeath: 1000,
 				additionalArg: 'some value'
 			});
 		});
@@ -647,7 +676,8 @@ describe('TankWarsModel', function () {
 				wallDamage: 30,
 				tankDamage: 50,
 				weaponDamage: 20,
-				weaponRange: 5
+				weaponRange: 5,
+				suddenDeath: 1000
 			}));
 			expect(result.additionalArg).not.toBeDefined();
 		});

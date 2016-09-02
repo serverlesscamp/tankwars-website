@@ -28,6 +28,7 @@ module.exports = function TankWarsModel(args) {
 		tankDamage,
 		weaponRange,
 		weaponDamage,
+		suddenDeath,
 		completeMap = function () {
 			return {
 				width: mapWidth,
@@ -35,7 +36,8 @@ module.exports = function TankWarsModel(args) {
 				matchId: matchId,
 				walls: walls,
 				tanks: tanks,
-				wallStrength: wallStrength
+				wallStrength: wallStrength,
+				suddenDeath: suddenDeath
 			};
 		},
 		wallByPosition = function (x, y) {
@@ -132,6 +134,12 @@ module.exports = function TankWarsModel(args) {
 			weaponRange = options.weaponRange || 5;
 			weaponDamage = options.weaponDamage || 20;
 			visibility = options.visibility || 5;
+			suddenDeath = options.suddenDeath || 1000;
+		},
+		suddenDeathTurn = function () {
+			if (suddenDeath > 0) {
+				suddenDeath--;
+			}
 		};
 	self.newMatch = function (options) {
 		var numTanks = options.numTanks || 2,
@@ -175,6 +183,7 @@ module.exports = function TankWarsModel(args) {
 		tanks.forEach(function (atank) {
 			atank.status = 'static';
 		});
+
 		if (command === 'forward') {
 			tryMoving(tank, tank.direction);
 		} else if (command === 'reverse') {
@@ -188,7 +197,7 @@ module.exports = function TankWarsModel(args) {
 		} else if (command === 'fire') {
 			tryShooting(tank);
 		}
-
+		suddenDeathTurn();
 		self.emit('change', completeMap());
 	};
 	self.getVisibleMapForTank = function (tankIndex) {
@@ -220,7 +229,8 @@ module.exports = function TankWarsModel(args) {
 			weaponRange: weaponRange,
 			you: tanks[tankIndex],
 			enemies: tanks.filter(isEnemy).map(getEnemyInfo),
-			walls: walls.filter(isVisible)
+			walls: walls.filter(isVisible),
+			suddenDeath: suddenDeath
 		};
 	};
 	self.alive = function (tankIndex) {

@@ -257,5 +257,17 @@ module.exports = function TankWarsModel(args) {
 			return tank.strength > 0;
 		}).length < 2;
 	};
+	self.getWinner = function () {
+		var result = false;
+		if (!self.isOver()) {
+			return false;
+		}
+		tanks.forEach(function (tank, index) {
+			if (tank.strength > 0) {
+				result = index;
+			}
+		});
+		return result;
+	};
 	loadOptions(options);
 };

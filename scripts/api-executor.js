@@ -33,6 +33,7 @@ module.exports = function ApiExecutor(model, appendLog) {
 			}
 		}).catch(function (err) {
 			appendLog('ERROR FROM TANK ' + tankLabel + '\n' + (err && (err.stack || err.message || JSON.stringify(err))));
+			model.executeCommand(tankIndex, 'pass');
 		});
 	};
 };

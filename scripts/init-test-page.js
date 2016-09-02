@@ -44,7 +44,11 @@ module.exports = function initMatchPage(document) {
 		findElement('matchId').innerHTML = map.matchId;
 		updateTankList(map.tanks);
 		matchContainer.classList.add('active');
+		findElement('suddenDeathTurns').innerHTML = map.suddenDeath;
 		log.clearLog();
+	});
+	model.on('change', function (map) {
+		findElement('suddenDeathTurns').innerHTML = map.suddenDeath;
 	});
 	randomMap.addEventListener('click', function () {
 		model.newMatch(packOptions(document));

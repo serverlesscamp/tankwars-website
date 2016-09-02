@@ -105,3 +105,18 @@ input#showLog:not(:checked) + .log { display: none; }
   background-repeat: no-repeat;
   padding-left: 60px;
 }
+
+.winner {
+	display: none;
+}
+.results .winner {
+	display: flex;
+}
+
+.win-container {
+	background-color: white;
+	flex-grow: 0;
+	flex-shrink: 0;
+	padding: 2em 2em 2em 2em;
+}
+

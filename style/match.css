@@ -37,6 +37,17 @@ wall[status="50"] {
 wall[status="25"] {
   background-image: url('../assets/tiles/wall-red-25.png');
 }
+fire {
+  position: absolute;
+  background-size: cover;
+  background-position: center center;
+  background-image: url('../assets/tiles/exp-3.png');
+  z-index: 7;
+  animation: explode 2s infinite;
+
+
+}
+
 tank {
   position: absolute;
   transition: all 1s ease-in-out;
@@ -273,9 +284,6 @@ tank.exploded::after {
   20% {
     background-image: url('../assets/tiles/exp-3.png');
   }
-  30% {
-    background-image: none;
-  }
   40% {
     background-image: url('../assets/tiles/exp-1.png');
   }
@@ -284,9 +292,6 @@ tank.exploded::after {
   }
   60% {
     background-image: url('../assets/tiles/exp-3.png');
-  }
-  70% {
-    background-image: none;
   }
   80% {
     background-image: url('../assets/tiles/exp-1.png');

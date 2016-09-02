@@ -725,6 +725,49 @@ describe('TankWarsModel', function () {
 			expect(model.alive(2)).toBeFalsy();
 		});
 	});
+	describe('winner', function () {
+		it('returns false if all tanks are alive', function () {
+			var model = new TankWarsModel({
+				tanks: [
+						{x: 1, y: 2, strength: 200, ammo: 111, direction: 'top', status: 'hit'},
+						{x: 3, y: 2, strength: 10, ammo: 100, direction: 'top', status: 'moving'},
+						{x: 7, y: 7, strength: 10, ammo: 100, direction: 'bottom', status: 'moving'}
+					]
+			});
+			expect(model.getWinner()).toEqual(false);
+		});
+
+		it('returns false if some tanks are dead, but at least two tanks are alive', function () {
+			var model = new TankWarsModel({
+				tanks: [
+						{x: 1, y: 2, strength: 200, ammo: 111, direction: 'top', status: 'hit'},
+						{x: 3, y: 2, strength: 0, ammo: 100, direction: 'top', status: 'moving'},
+						{x: 7, y: 7, strength: 10, ammo: 100, direction: 'bottom', status: 'moving'}
+					]
+			});
+			expect(model.getWinner()).toEqual(false);
+		});
+		it('returns the winning tank index if only one is alive', function () {
+			var model = new TankWarsModel({
+				tanks: [
+						{x: 3, y: 2, strength: 0, ammo: 100, direction: 'top', status: 'moving'},
+						{x: 1, y: 2, strength: 200, ammo: 111, direction: 'top', status: 'hit'},
+						{x: 7, y: 7, strength: 0, ammo: 100, direction: 'bottom', status: 'moving'}
+					]
+			});
+			expect(model.getWinner()).toEqual(1);
+		});
+		it('returns false if no alive tanks', function () {
+			var model = new TankWarsModel({
+				tanks: [
+						{x: 1, y: 2, strength: 0, ammo: 111, direction: 'top', status: 'hit'},
+						{x: 3, y: 2, strength: 0, ammo: 100, direction: 'top', status: 'moving'},
+						{x: 7, y: 7, strength: 0, ammo: 100, direction: 'bottom', status: 'moving'}
+					]
+			});
+			expect(model.getWinner()).toEqual(false);
+		});
+	});
 
 	describe('isOver', function () {
 		it('returns false if all tanks are alive', function () {

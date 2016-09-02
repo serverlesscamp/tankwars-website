@@ -11,19 +11,24 @@ body_class: match
 		<textarea role="log" class="log huge">
 		</textarea>
 	</div>
-
+	<div class="winner modal column">
+		<div class="win-container">
+			<h1 role="outcome"></h1>
+			<button role="startAgain">Start Again</button>
+		</div>
+	</div>
 	<input type="checkbox" id="advancedOptions">
-	<div class="advancedOptions">
+	<div class="advancedOptions hide-when-active">
 	{%include map_options.html %}
 	</div>
-	<div class="row">
+	<div class="row hide-when-active">
 		<label>Tank 1 API URL:</label> <input role="tank1Api" class="long" placeholder="https://abc/def" />
 	</div>
-	<div class="row">
+	<div class="row hide-when-active ">
 		<label>Tank 2 API URL:</label> <input role="tank2Api" class="long" placeholder="https://abc/def" />
 	</div>
 	<div>
-		<button><label for="advancedOptions">Advanced options</label></button> <button role="initMatch" class="hide-when-active green">New Match</button>
+		<button class="hide-when-active"><label for="advancedOptions">Advanced options</label></button> <button role="initMatch" class="hide-when-active green">New Match</button>
 		<button><label for="showLog">Show Log</label></button>
 	</div>
 	<div class="row show-when-active">

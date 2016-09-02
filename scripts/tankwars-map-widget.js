@@ -37,20 +37,27 @@ module.exports = function mapWidget(domElement, scale, model) {
 			}
 			return tankElement;
 		},
-		getWallElement = function (x, y) {
-			var wallElement = domElement.querySelector('wall[x="' + x + '"][y="' + y + '"]');
-			if (!wallElement) {
-				wallElement = document.createElement('wall');
-				wallElement.setAttribute('x', x);
-				wallElement.setAttribute('y', y);
-				wallElement.id = 'wall' + x + 'x' + y;
-				wallElement.style.top = y * scale + 'px';
-				wallElement.style.left = x * scale + 'px';
-				wallElement.style.width = scale + 'px';
-				wallElement.style.height = scale + 'px';
-				domElement.appendChild(wallElement);
+		getPositionedElement = function (x, y, type) {
+			var id = 'type' + x + 'x' + y,
+				element = document.getElementById(id);
+			if (!element) {
+				element = document.createElement(type);
+				element.setAttribute('x', x);
+				element.setAttribute('y', y);
+				element.id = id;
+				element.style.top = y * scale + 'px';
+				element.style.left = x * scale + 'px';
+				element.style.width = scale + 'px';
+				element.style.height = scale + 'px';
+				domElement.appendChild(element);
 			}
-			return wallElement;
+			return element;
+		},
+		getWallElement = function (x, y) {
+			return getPositionedElement(x, y, 'wall');
+		},
+		getFireElement = function (x, y) {
+			return getPositionedElement(x, y, 'fire');
 		},
 		updateWalls = function (walls, maxStrength) {
 			var forPurgingDomList = domElement.querySelectorAll('wall'),
@@ -70,6 +77,23 @@ module.exports = function mapWidget(domElement, scale, model) {
 				document.getElementById(id).remove();
 			});
 		},
+		updateSuddenDeathFields = function (fields) {
+			var forPurgingDomList = domElement.querySelectorAll('fire'),
+				forPurgingIds = {};
+
+			Object.keys(forPurgingDomList).forEach(function (key) {
+				forPurgingIds[forPurgingDomList[key].id] = true;
+			});
+
+			fields.forEach(function (field) {
+				var fieldDom = getFireElement(field.x, field.y);
+				delete forPurgingIds[fieldDom.id];
+			});
+			Object.keys(forPurgingIds).forEach(function (id) {
+				document.getElementById(id).remove();
+			});
+		},
+
 		addBullet = function (tankElement, targetPosition) {
 			var bulletElement = document.createElement('bullet');
 			bulletElement.addEventListener('animationend', function () {
@@ -110,6 +134,7 @@ module.exports = function mapWidget(domElement, scale, model) {
 			domElement.style.height = (map.height * scale + 1) + 'px';
 			domElement.style.backgroundSize =  scale + 'px ' + scale + 'px ';
 			updateWalls(map.walls, map.wallStrength);
+			updateSuddenDeathFields(map.suddenDeathFields);
 			updateTanks(map.tanks);
 		};
 

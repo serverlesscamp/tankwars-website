@@ -648,4 +648,109 @@ describe('TankWarsModel', function () {
 			expect(result.enemies[1]).toEqual({strength: 50});
 		});
 	});
+	describe('alive', function () {
+		it('returns true if the tank is still in the game', function () {
+			var model = new TankWarsModel({
+				tanks: [
+						{x: 1, y: 2, strength: 200, ammo: 111, direction: 'top', status: 'hit'},
+						{x: 3, y: 2, strength: 1, ammo: 100, direction: 'top', status: 'moving'},
+						{x: 7, y: 7, strength: 0, ammo: 100, direction: 'bottom', status: 'moving'}
+						],
+				walls: [{x: 3, y: 3, strength: 100}, {x: 10, y: 10, strength: 50}],
+				mapWidth: 20,
+				mapHeight: 15,
+				visibility: 4,
+				wallDamage: 30,
+				tankDamage: 50,
+				weaponDamage: 20,
+				weaponRange: 5,
+				additionalArg: 'some value'
+			});
+			expect(model.alive(0)).toBeTruthy();
+			expect(model.alive(1)).toBeTruthy();
+			expect(model.alive(2)).toBeFalsy();
+		});
+	});
+
+	describe('isOver', function () {
+		it('returns false if all tanks are alive', function () {
+			var model = new TankWarsModel({
+				tanks: [
+						{x: 1, y: 2, strength: 200, ammo: 111, direction: 'top', status: 'hit'},
+						{x: 3, y: 2, strength: 10, ammo: 100, direction: 'top', status: 'moving'},
+						{x: 7, y: 7, strength: 10, ammo: 100, direction: 'bottom', status: 'moving'}
+						],
+				walls: [{x: 3, y: 3, strength: 100}, {x: 10, y: 10, strength: 50}],
+				mapWidth: 20,
+				mapHeight: 15,
+				visibility: 4,
+				wallDamage: 30,
+				tankDamage: 50,
+				weaponDamage: 20,
+				weaponRange: 5,
+				additionalArg: 'some value'
+			});
+			expect(model.isOver()).toBeFalsy();
+		});
+
+		it('returns false if some tanks are dead, but at least two tanks are alive', function () {
+			var model = new TankWarsModel({
+				tanks: [
+						{x: 1, y: 2, strength: 200, ammo: 111, direction: 'top', status: 'hit'},
+						{x: 3, y: 2, strength: 0, ammo: 100, direction: 'top', status: 'moving'},
+						{x: 7, y: 7, strength: 10, ammo: 100, direction: 'bottom', status: 'moving'}
+						],
+				walls: [{x: 3, y: 3, strength: 100}, {x: 10, y: 10, strength: 50}],
+				mapWidth: 20,
+				mapHeight: 15,
+				visibility: 4,
+				wallDamage: 30,
+				tankDamage: 50,
+				weaponDamage: 20,
+				weaponRange: 5,
+				additionalArg: 'some value'
+			});
+			expect(model.isOver()).toBeFalsy();
+		});
+		it('returns true if exactly one tank is alive', function () {
+			var model = new TankWarsModel({
+				tanks: [
+						{x: 1, y: 2, strength: 200, ammo: 111, direction: 'top', status: 'hit'},
+						{x: 3, y: 2, strength: 0, ammo: 100, direction: 'top', status: 'moving'},
+						{x: 7, y: 7, strength: 0, ammo: 100, direction: 'bottom', status: 'moving'}
+						],
+				walls: [{x: 3, y: 3, strength: 100}, {x: 10, y: 10, strength: 50}],
+				mapWidth: 20,
+				mapHeight: 15,
+				visibility: 4,
+				wallDamage: 30,
+				tankDamage: 50,
+				weaponDamage: 20,
+				weaponRange: 5,
+				additionalArg: 'some value'
+			});
+			expect(model.isOver()).toBeTruthy();
+		});
+		it('returns true if no alive tanks', function () {
+			var model = new TankWarsModel({
+				tanks: [
+						{x: 1, y: 2, strength: 0, ammo: 111, direction: 'top', status: 'hit'},
+						{x: 3, y: 2, strength: 0, ammo: 100, direction: 'top', status: 'moving'},
+						{x: 7, y: 7, strength: 0, ammo: 100, direction: 'bottom', status: 'moving'}
+						],
+				walls: [{x: 3, y: 3, strength: 100}, {x: 10, y: 10, strength: 50}],
+				mapWidth: 20,
+				mapHeight: 15,
+				visibility: 4,
+				wallDamage: 30,
+				tankDamage: 50,
+				weaponDamage: 20,
+				weaponRange: 5,
+				additionalArg: 'some value'
+			});
+			expect(model.isOver()).toBeTruthy();
+		});
+	});
+
+
 });

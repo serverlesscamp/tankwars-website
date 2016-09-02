@@ -18,7 +18,7 @@ module.exports = function initMatchPage(document) {
 		manualTankSelector = findElement('tankManual'),
 		apiTankSelector = findElement('tankApi'),
 		updateCommandOptions = function (commands) {
-			commandSelector.innerHTML = '<option>---</option>' + commands.map(function (command) {
+			commandSelector.innerHTML = commands.map(function (command) {
 				return '<option>' + command + '</option>';
 			}).join(' ');
 		},

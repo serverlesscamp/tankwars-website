@@ -216,5 +216,13 @@ module.exports = function TankWarsModel(args) {
 			walls: walls.filter(isVisible)
 		};
 	};
+	self.alive = function (tankIndex) {
+		return tanks[tankIndex].strength > 0;
+	};
+	self.isOver = function () {
+		return tanks.filter(function (tank) {
+			return tank.strength > 0;
+		}).length < 2;
+	};
 	loadOptions(options);
 };

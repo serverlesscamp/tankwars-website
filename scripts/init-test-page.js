@@ -83,7 +83,7 @@ module.exports = function initMatchPage(document) {
 				throw 'invalid response: ' + response.body;
 			}
 		}).catch(function (err) {
-			log.value = log.value + '\n-----\n' + err && (err.stack || err.message || JSON.stringify(err));
+			log.value = log.value + '\n-----\n' + (err && (err.stack || err.message || JSON.stringify(err)));
 		});
 
 	});

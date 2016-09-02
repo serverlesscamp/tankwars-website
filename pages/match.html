@@ -10,10 +10,10 @@ body_class: match
 	{%include map_options.html %}
 	</div>
 	<div class="row">
-		<label>Tank 1 API URL:</label> <input role="option" name="tank1Api" class="long" placeholder="https://abc/def" />
+		<label>Tank 1 API URL:</label> <input role="tank1Api" class="long" placeholder="https://abc/def" />
 	</div>
 	<div class="row">
-		<label>Tank 2 API URL:</label> <input role="option" name="tank2Api" class="long" placeholder="https://abc/def" />
+		<label>Tank 2 API URL:</label> <input role="tank2Api" class="long" placeholder="https://abc/def" />
 	</div>
 	<div>
 		<button><label for="advancedOptions">Advanced options</label></button> <button role="initMatch" class="hide-when-active green">New Match</button>
@@ -26,7 +26,6 @@ body_class: match
 			<div>
 				Match ID: <span role="matchId"></span><br/>
 			</div>
-			<div><button role="execute">Send</button></div>
 			{%include tank_status.html %}
 		</div>
 	</div>

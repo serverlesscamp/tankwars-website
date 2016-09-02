@@ -214,6 +214,9 @@ module.exports = function TankWarsModel(args) {
 		}
 		suddenDeathTurn();
 		self.emit('change', completeMap());
+		if (self.isOver()) {
+			self.emit('over', self.getWinner());
+		}
 	};
 	self.getVisibleMapForTank = function (tankIndex) {
 		var tank = tanks[tankIndex],
@@ -246,7 +249,7 @@ module.exports = function TankWarsModel(args) {
 			enemies: tanks.filter(isEnemy).map(getEnemyInfo),
 			walls: walls.filter(isVisible),
 			suddenDeath: suddenDeath,
-			suddenDeathFields: suddenDeathFields
+			fireFields: suddenDeathFields.filter(isVisible)
 		};
 	};
 	self.alive = function (tankIndex) {

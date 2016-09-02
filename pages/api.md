@@ -59,6 +59,7 @@ Your endpoint will get an `application/json` POST request, containing the follow
   matchId: string, // unique ID for each match
   mapWidth: int, 
   mapHeight: int, 
+  suddenDeath: int, // number of turns left until sudden death starts
   wallDamage: int, // how much damage does it cause to run into a wall
   tankDamage: int, // how much damage does it cause to run into a tank -- also, how much damage your tank causes when it runs into a wall
   weaponDamage: int, // how much damage does it cause to hit something with a bullet
@@ -66,7 +67,8 @@ Your endpoint will get an `application/json` POST request, containing the follow
   weaponRange: int, // how far, in fields, you can hit with a bullet 
   you: TANK, // your tank info -- see the tank structure below
   enemies: [TANK], // array. enemy tank info. see the tank structure below
-  walls: [WALL] // array. visible walls. see the wall structure below
+  walls: [WALL], // array. visible walls. see the wall structure below
+  fireFields: [FIELD] // array, visible fields caught by fire
 };
 {%endhighlight%}
 
@@ -99,7 +101,7 @@ The information on enemy tanks will be in the `enemies` key of the map your comm
 
 ### Walls
 
-You can only see walls in your visibility zone:
+Bumping into a wall causes damage. You can only see walls in your visibility zone:
 
 {%highlight js%}
 { 
@@ -111,48 +113,73 @@ You can only see walls in your visibility zone:
 
 *Note*: trying to move outside the map space will cause damage equal to wall damage. Border walls (around the entire map) are not in this list, but assume that anything outside [0,0] -> [mapWidth, mapHeight] is a wall.
 
+### Fire fields
+
+Staying in fire causes damage. You can only see fire fields in your visibility zone. During sudden death, fire expands quickly.
+
+{%highlight js%}
+{ 
+  x: int, 
+  y: int
+}
+
+{%endhighlight %}
+
 ## Example request {#example-request}
 
 {%highlight json%}
 {
+  "matchId": "d191f1cc-c179-4779-b649-af5e9dab198e",
   "mapWidth": 30,
-  "mapHeight": 20,
+  "mapHeight": 10,
   "wallDamage": 30,
   "tankDamage": 50,
   "weaponDamage": 60,
   "visibility": 5,
   "weaponRange": 5,
   "you": {
-    "direction": "left",
-    "x": 18,
-    "y": 0,
-    "strength": 60,
-    "ammo": 1000,
-    "status": "moving"
+    "direction": "top",
+    "x": 29,
+    "y": 8,
+    "strength": 300,
+    "ammo": 995,
+    "status": "firing",
+    "targetRange": 4
   },
   "enemies": [
     {
-      "strength": 300
+      "direction": "bottom",
+      "x": 29,
+      "y": 4,
+      "strength": 240,
+      "ammo": 1000,
+      "status": "hit"
     }
   ],
   "walls": [
     {
-      "x": 15,
-      "y": 1,
+      "x": 26,
+      "y": 7,
       "strength": 200
     },
     {
-      "x": 21,
-      "y": 2,
+      "x": 28,
+      "y": 7,
       "strength": 200
     },
     {
-      "x": 21,
-      "y": 1,
+      "x": 27,
+      "y": 7,
+      "strength": 200
+    },
+    {
+      "x": 25,
+      "y": 7,
       "strength": 200
     }
   ],
-  "matchId": "368f865a-0143-42ac-9a42-7d8b30f482b7"
+  "suddenDeath": 10,
+  "fireFields": []
 }
 {%endhighlight %}
 

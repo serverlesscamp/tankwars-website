@@ -662,7 +662,7 @@ describe('TankWarsModel', function () {
 				weaponDamage: 20,
 				weaponRange: 5,
 				suddenDeath: 1000,
-				suddenDeathFields: [{x: 1, y: 3}],
+				suddenDeathFields: [{x: 1, y: 3}, {x: 7, y: 6}],
 				additionalArg: 'some value'
 			});
 		});
@@ -697,8 +697,8 @@ describe('TankWarsModel', function () {
 			var result = model.getVisibleMapForTank(0);
 			expect(result.enemies[1]).toEqual({strength: 50});
 		});
-		it('includes sudden death fields', function () {
-			expect(model.getVisibleMapForTank(0).suddenDeathFields).toEqual([{x: 1, y: 3}]);
+		it('includes only visible sudden death fields', function () {
+			expect(model.getVisibleMapForTank(0).fireFields).toEqual([{x: 1, y: 3}]);
 
 		});
 	});

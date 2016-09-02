@@ -22,10 +22,10 @@ module.exports = function initMatchPage(document) {
 		apiExecutor = new ApiExecutor(model, log.appendLog),
 		tank1Api = localStorageCacheWidget(findElement('tank1Api'), 'api1Url'),
 		tank2Api = localStorageCacheWidget(findElement('tank2Api'), 'api2Url'),
-		showWinner = function () {
+		showWinner = function (winner) {
 			var outcome = findElement('outcome'), winnerLabel;
 			matchContainer.classList.add('results');
-			if (model.getWinner() !== false) { // can be 0
+			if (winner !== false) { // can be 0
 				winnerLabel = 'tank' + (model.getWinner() + 1);
 				outcome.innerHTML = 'Winner: ' + findElement(winnerLabel + 'Name').innerHTML;
 				outcome.setAttribute('class', winnerLabel + 'avatar');
@@ -46,8 +46,6 @@ module.exports = function initMatchPage(document) {
 			]).then(function () {
 				if (!model.isOver()) {
 					runCommand();
-				} else {
-					showWinner();
 				}
 			});
 		},
@@ -60,6 +58,7 @@ module.exports = function initMatchPage(document) {
 			});
 		};
 
+	model.on('over', showWinner);
 	tankStatusWidget(document.querySelectorAll('[role=tankStatus]'), model);
 	mapWidget(findElement('matchMap'), scaleMultiplier, model);
 

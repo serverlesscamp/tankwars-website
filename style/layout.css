@@ -127,4 +127,28 @@ footer {
 
 code {
   white-space: pre-wrap;
+  border: 1px solid rgb(100,100,100);
+  background-color: rgb(220, 220, 220);
+  display: inline-block;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+.center {
+	align-items: center;
+}
+.modal {
+	position: absolute;
+	z-index: 999;
+	display: flex;
+	align-items: center;
+	justify-content: align;
+	width: 100%;
+	height: 100%;
+	top: 0px;
+	left: 0px;
+	background-color: rgba(0, 0, 0, 0.4);
+}
+.huge {
+	flex-grow: 1;
+	flex-shrink: 0;
 }

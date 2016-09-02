@@ -1,10 +1,11 @@
-/*global module, require, localStorage */
+/*global module, require */
 
 var TankWarsModel = require('./tankwars-model'),
 	mapWidget = require('./tankwars-map-widget'),
-	updateTankStatuses = require('./update-tank-statuses'),
-	promisingXhr = require('./promising-xhr'),
-	uuid = require('uuid'),
+	tankStatusWidget = require('./update-tank-statuses'),
+	localStorageCacheWidget = require('./local-storage-cache-widget'),
+	logWidget = require('./log-widget'),
+	ApiExecutor = require('./api-executor'),
 	packOptions = require('./pack-options');
 
 module.exports = function initMatchPage(document) {
@@ -28,27 +29,22 @@ module.exports = function initMatchPage(document) {
 			apiTankSelector.innerHTML = tanks.map(function (tank, index) {
 				return '<option value="' + index + '"> Tank ' + index + '</option>';
 			}).join(' ');
-
 		},
 		randomMap = findElement('randomMap'),
 		matchContainer = findElement('matchContainer'),
-		matchMap = mapWidget(findElement('matchMap'), scaleMultiplier),
 		model = new TankWarsModel(),
-		matchId,
-		apiUrl = findElement('apiUrl'),
-		log = findElement('log');
+		matchMap = mapWidget(findElement('matchMap'), scaleMultiplier, model),
+		apiUrl = localStorageCacheWidget(findElement('apiUrl'), 'apiUrl'),
+		log = logWidget(findElement('log')),
+		apiExecutor = new ApiExecutor(model, log.appendLog);
 
+	tankStatusWidget(document.querySelectorAll('[role=tankStatus]'), model);
 	model.on('newMatch', function (map) {
-		matchMap.updateMap(map);
-		matchId = uuid.v4();
 		updateCommandOptions(model.getSupportedCommands());
+		findElement('matchId').innerHTML = map.matchId;
 		updateTankList(map.tanks);
 		matchContainer.classList.add('active');
-		updateTankStatuses(map, document);
-	});
-	model.on('change', function (map) {
-		matchMap.updateMap(map);
-		updateTankStatuses(map, document);
+		log.clearLog();
 	});
 	randomMap.addEventListener('click', function () {
 		model.newMatch(packOptions(document));
@@ -64,35 +60,14 @@ module.exports = function initMatchPage(document) {
 		}
 	});
 	findElement('execute').addEventListener('click', function () {
-		model.executeCommand(parseInt(manualTankSelector.value), commandSelector.value);
+		var tankId = parseInt(manualTankSelector.value);
+		log.appendLog('Manually sending ' + commandSelector.value + ' to tank ' + tankId);
+		model.executeCommand(tankId, commandSelector.value);
 	});
 	findElement('executeApi').addEventListener('click', function () {
-		var tankId = parseInt(apiTankSelector.value),
-			toSend = model.getVisibleMapForTank(tankId);
-		toSend.matchId = matchId;
-		log.value = 'sending:\n' + JSON.stringify(toSend, null, 2);
-		promisingXhr({
-			url: apiUrl.value + '/command',
-			method: 'POST',
-			data: toSend
-		}).then(function (response) {
-			if (response && response.body && response.body.command) {
-				log.value = log.value + '\n-----\n RECEIVED: ' + JSON.stringify(response.body, null, 2);
-				model.executeCommand(tankId, response.body.command);
-			} else {
-				throw 'invalid response: ' + response.body;
-			}
-		}).catch(function (err) {
-			log.value = log.value + '\n-----\n' + (err && (err.stack || err.message || JSON.stringify(err)));
-		});
-
+		var tankId = parseInt(apiTankSelector.value);
+		apiExecutor.execute(tankId, apiUrl.value);
 	});
 	model.newMatch(packOptions(document));
-	apiUrl.addEventListener('change', function () {
-		localStorage.apiUrl = this.value;
-	});
-	if (localStorage.apiUrl) {
-		apiUrl.value = localStorage.apiUrl;
-	}
 };
 

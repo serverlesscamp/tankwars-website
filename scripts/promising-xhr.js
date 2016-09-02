@@ -7,6 +7,7 @@ module.exports = function promisingXhr(options) {
 	return new Promise(function (resolve, reject) {
 		xhr.open(method, options.url, true);
 		xhr.responseType = 'json';
+		xhr.timeout = options.timeout || 0;
 		if (postData) {
 			xhr.setRequestHeader('Content-type', 'application/json');
 		}

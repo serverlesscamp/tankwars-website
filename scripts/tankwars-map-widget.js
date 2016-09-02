@@ -1,5 +1,5 @@
 /*global module */
-module.exports = function mapWidget(domElement, scale) {
+module.exports = function mapWidget(domElement, scale, model) {
 	'use strict';
 	var document = domElement.ownerDocument,
 		directions = {
@@ -104,14 +104,21 @@ module.exports = function mapWidget(domElement, scale) {
 					tankElement.classList.remove('exploded');
 				}
 			});
+		},
+		updateMap = function (map) {
+			domElement.style.width = (map.width * scale + 1) + 'px';
+			domElement.style.height = (map.height * scale + 1) + 'px';
+			domElement.style.backgroundSize =  scale + 'px ' + scale + 'px ';
+			updateWalls(map.walls, map.wallStrength);
+			updateTanks(map.tanks);
 		};
-	domElement.updateMap = function (map) {
-		domElement.style.width = (map.width * scale + 1) + 'px';
-		domElement.style.height = (map.height * scale + 1) + 'px';
-		domElement.style.backgroundSize =  scale + 'px ' + scale + 'px ';
-		updateWalls(map.walls, map.wallStrength);
-		updateTanks(map.tanks);
-	};
+
+	model.on('newMatch', function (map) {
+		updateMap(map);
+	});
+	model.on('change', function (map) {
+		updateMap(map);
+	});
 	return domElement;
 };
 

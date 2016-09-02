@@ -1,5 +1,6 @@
 /*global module, require */
 var makeEmitter = require('./mini-emit'),
+	uuid = require('uuid'),
 	freeSpace = require('./free-space');
 module.exports = function TankWarsModel(args) {
 	'use strict';
@@ -17,6 +18,7 @@ module.exports = function TankWarsModel(args) {
 		walls = options.walls,
 		tanks = options.tanks,
 		mapWidth,
+		matchId,
 		visibility,
 		mapHeight,
 		wallStrength,
@@ -28,10 +30,11 @@ module.exports = function TankWarsModel(args) {
 		weaponDamage,
 		completeMap = function () {
 			return {
-				walls: walls,
-				tanks: tanks,
 				width: mapWidth,
 				height: mapHeight,
+				matchId: matchId,
+				walls: walls,
+				tanks: tanks,
 				wallStrength: wallStrength
 			};
 		},
@@ -136,11 +139,14 @@ module.exports = function TankWarsModel(args) {
 			horizontalWallProb = options.horizontalWallProb || 0.5,
 			minSpacing = options.minSpacing || 3;
 
+		matchId = uuid.v4();
 		loadOptions(options);
-
 		walls = mazeBuilder(mapWidth, mapHeight, horizontalWallProb, verticalWallProb, minSpacing, randomizer).map(makeWall);
 		tanks = randomizer.shuffle(freeSpace(walls, mapWidth, mapHeight)).slice(-1 * numTanks).map(makeTank);
 		self.emit('newMatch', completeMap());
+	};
+	self.getMatchId = function () {
+		return matchId;
 	};
 	self.addWall = function (x, y) {
 		if (x >= 0 && x < mapWidth && y >= 0 && y < mapHeight) {
@@ -204,6 +210,7 @@ module.exports = function TankWarsModel(args) {
 				}
 			};
 		return {
+			matchId: matchId,
 			mapWidth: mapWidth,
 			mapHeight: mapHeight,
 			wallDamage: wallDamage,

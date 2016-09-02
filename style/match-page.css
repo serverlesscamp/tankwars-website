@@ -1,5 +1,6 @@
-body.match input#advancedOptions { display: none;}
-body.match input#advancedOptions:not(:checked) + .advancedOptions { display: none; }
+input#advancedOptions { display: none;}
+input#advancedOptions:not(:checked) + .advancedOptions { display: none; }
+
 
 textarea.log {
   margin: 10px 0 20px;

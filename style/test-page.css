@@ -5,3 +5,9 @@ body.test textarea[role=args] {
 	width: 100%;
 	height: 100px;
 }
+
+body.test .tankstatus { display: inline;}
+body.test .tankstatus ul, .tankstatus ul li { display: inline; padding-left: 0; margin-left: 0;}
+body.test .tankstatus ul li { list-style: none; }
+
+

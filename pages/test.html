@@ -5,29 +5,40 @@ body_class: test
 ---
 
 <div role="matchContainer" class="column">
+	<input type="checkbox" id="advancedOptions">
+	<div class="advancedOptions">
 	{%include map_options.html %}
+	</div>
 	<div>
 		<label>Number of tanks:</label> <input role="option" name="numTanks" value="2"/>
+		<button><label for="advancedOptions">Advanced options</label></button>
 		<button role="randomMap">Randomize map</button>
 	</div>
-	<div class="row show-when-active">
-		<div role="matchMap"></div>
-		<div class="dashboard">
-			<div>
-				<label>Send:</label> 
-				<select role="command"> 
-					<option>---</option>
-				</select>
-				<label>To:</label>
-				<select role="tankIndex"> 
-					<option value="0">Tank 0</option>
-					<option value="1">Tank 1</option>
-				</select>
-			</div>
-			<div><button role="execute">Send</button></div>
+
+
+	<div class="column show-when-active">
+		<div>
+			<label>Use API URL:</label> <input role="apiUrl" placeholder="https://abc/def" />
+			<label>for</label>
+			<select role="tankApi"> 
+			</select>
+			<button role="executeApi">Send</button>
+		</div>
+		<div>
+			<label>Send:</label> 
+			<select role="command"> 
+				<option>---</option>
+			</select>
+			<label>To:</label>
+			<select role="tankManual"> 
+			</select>
+			<button role="execute">Send</button>
+		</div>
+		<div>
 			{%include tank_status.html %}			
 		</div>
-
+		<div role="matchMap"></div>
+		<textarea role="log"></textarea>
 	</div>
 </div>
 

@@ -1,4 +1,4 @@
-/*global module, require */
+/*global module, require, localStorage */
 
 var TankWarsModel = require('./tankwars-model'),
 	mapWidget = require('./tankwars-map-widget'),
@@ -35,6 +35,7 @@ module.exports = function initMatchPage(document) {
 		matchMap = mapWidget(findElement('matchMap'), scaleMultiplier),
 		model = new TankWarsModel(),
 		matchId,
+		apiUrl = findElement('apiUrl'),
 		log = findElement('log');
 
 	model.on('newMatch', function (map) {
@@ -71,7 +72,7 @@ module.exports = function initMatchPage(document) {
 		toSend.matchId = matchId;
 		log.value = 'sending:\n' + JSON.stringify(toSend, null, 2);
 		promisingXhr({
-			url: findElement('apiUrl').value + '/command',
+			url: apiUrl.value + '/command',
 			method: 'POST',
 			data: toSend
 		}).then(function (response) {
@@ -87,5 +88,11 @@ module.exports = function initMatchPage(document) {
 
 	});
 	model.newMatch(packOptions(document));
+	apiUrl.addEventListener('change', function () {
+		localStorage.apiUrl = this.value;
+	});
+	if (localStorage.apiUrl) {
+		apiUrl.value = localStorage.apiUrl;
+	}
 };
 

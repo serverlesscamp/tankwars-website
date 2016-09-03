@@ -1,6 +1,7 @@
 ---
 layout: default
 title: API Docs
+header: true
 body_class: api
 ---
 

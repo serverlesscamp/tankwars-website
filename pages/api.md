@@ -47,6 +47,7 @@ valid commands are:
 * `forward`: move one field in the direction the tank is facing
 * `reverse`: move one field in the opposite direction
 * `fire`: shoot in the direction the tank is facing
+* `pass`: do nothing
 
 The easiest way to see the effect of various commands is to manually send commands from the [Test Your API](/pages/test.html) page.
 

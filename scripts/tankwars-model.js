@@ -249,7 +249,7 @@ module.exports = function TankWarsModel(args) {
 			enemies: tanks.filter(isEnemy).map(getEnemyInfo),
 			walls: walls.filter(isVisible),
 			suddenDeath: suddenDeath,
-			fireFields: suddenDeathFields.filter(isVisible)
+			fire: suddenDeathFields.filter(isVisible)
 		};
 	};
 	self.alive = function (tankIndex) {

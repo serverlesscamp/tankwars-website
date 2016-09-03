@@ -698,7 +698,7 @@ describe('TankWarsModel', function () {
 			expect(result.enemies[1]).toEqual({strength: 50});
 		});
 		it('includes only visible sudden death fields', function () {
-			expect(model.getVisibleMapForTank(0).fireFields).toEqual([{x: 1, y: 3}]);
+			expect(model.getVisibleMapForTank(0).fire).toEqual([{x: 1, y: 3}]);
 
 		});
 	});

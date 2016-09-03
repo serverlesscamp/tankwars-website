@@ -68,7 +68,7 @@ Your endpoint will get an `application/json` POST request, containing the follow
   you: TANK, // your tank info -- see the tank structure below
   enemies: [TANK], // array. enemy tank info. see the tank structure below
   walls: [WALL], // array. visible walls. see the wall structure below
-  fireFields: [FIELD] // array, visible fields caught by fire
+  fire: [FIELD] // array, visible fields caught by fire
 };
 {%endhighlight%}
 
@@ -179,7 +179,7 @@ Staying in fire causes damage. You can only see fire fields in your visibility z
     }
   ],
   "suddenDeath": 10,
-  "fireFields": []
+  "fire": []
 }
 {%endhighlight %}
 

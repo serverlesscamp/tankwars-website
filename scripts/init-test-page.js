@@ -72,6 +72,14 @@ module.exports = function initMatchPage(document) {
 		var tankId = parseInt(apiTankSelector.value);
 		apiExecutor.execute(tankId, apiUrl.value);
 	});
+	findElement('toggleAdvancedOptions').addEventListener('click', function () {
+		findElement('advancedOptions').classList.toggle('hide');
+	});
+	findElement('showLog').addEventListener('click', function () {
+		findElement('logModal').classList.remove('hide');
+	});
+	findElement('closeLog').addEventListener('click', function () {
+		findElement('logModal').classList.add('hide');
+	});
 	model.newMatch(packOptions(document));
 };
-

@@ -79,5 +79,13 @@ module.exports = function initMatchPage(document) {
 		model.newMatch(packOptions(document));
 	});
 	findElement('startAgain').addEventListener('click', startAgain);
+	findElement('toggleAdvancedOptions').addEventListener('click', function () {
+		findElement('advancedOptions').classList.toggle('hide');
+	});
+	findElement('showLog').addEventListener('click', function () {
+		findElement('logModal').classList.remove('hide');
+	});
+	findElement('closeLog').addEventListener('click', function () {
+		findElement('logModal').classList.add('hide');
+	});
 };
-

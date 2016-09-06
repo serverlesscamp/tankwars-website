@@ -63,8 +63,8 @@ module.exports = function mapWidget(domElement, scale, model) {
 			var forPurgingDomList = domElement.querySelectorAll('wall'),
 				forPurgingIds = {};
 
-			Object.keys(forPurgingDomList).forEach(function (key) {
-				forPurgingIds[forPurgingDomList[key].id] = true;
+			Array.prototype.slice.call(forPurgingDomList).forEach(function (element) {
+				forPurgingIds[element.id] = true;
 			});
 
 			walls.forEach(function (wall) {
@@ -81,9 +81,10 @@ module.exports = function mapWidget(domElement, scale, model) {
 			var forPurgingDomList = domElement.querySelectorAll('fire'),
 				forPurgingIds = {};
 
-			Object.keys(forPurgingDomList).forEach(function (key) {
-				forPurgingIds[forPurgingDomList[key].id] = true;
+			Array.prototype.slice.call(forPurgingDomList).forEach(function (element) {
+				forPurgingIds[element.id] = true;
 			});
+
 
 			fields.forEach(function (field) {
 				var fieldDom = getFireElement(field.x, field.y);

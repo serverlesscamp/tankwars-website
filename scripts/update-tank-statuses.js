@@ -2,9 +2,8 @@
 module.exports = function tankStatusWidget(statusElements, model) {
 	'use strict';
 	var update = function (map) {
-		Object.keys(statusElements).forEach(function (index) {
-			var element = statusElements[index],
-			tankKey = parseInt(element.getAttribute('key')),
+		Array.prototype.slice.call(statusElements).forEach(function (element) {
+			var	tankKey = parseInt(element.getAttribute('key')),
 			tankProp = element.getAttribute('flag');
 			element.innerHTML = map.tanks[tankKey][tankProp];
 		});

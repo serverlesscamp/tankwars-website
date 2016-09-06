@@ -19,6 +19,7 @@ textarea.log {
   margin: 0 30px 0 10px;
   padding: 0 10px;
   height: 30px;
+  line-height: 30px;
   border: 3px solid #444;
   font-family: fff_forward;
 }
@@ -36,6 +37,7 @@ textarea.log {
   padding: 0 20px;
   height: 36px;
   border: 3px solid #444;
+  line-height: 30px;  
   font-family: fff_forward;
   background: #cbd0bd;
   cursor: pointer;

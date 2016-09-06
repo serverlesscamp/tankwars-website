@@ -3,8 +3,7 @@ module.exports = function packOptions(document) {
 	'use strict';
 	var optionFields = document.querySelectorAll('[role=option]'),
 	options = {};
-	Object.keys(optionFields).forEach(function (key) {
-		var field = optionFields[key];
+	Array.prototype.slice.call(optionFields).forEach(function (field) {
 		if (field.getAttribute('data-type') === 'float') {
 			options[field.getAttribute('name')] = parseFloat(field.value);
 		} else {

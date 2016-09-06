@@ -1,21 +1,19 @@
 ---
 layout: default
-title: Test your API 
+title: Test your API
 header: true
 body_class: test
 ---
 
 
 <div role="matchContainer" class="matchContainer column">
-	<input type="checkbox" id="showLog">
-	<div class="log modal column">
-		<button><label for="showLog">Close Log</label></button>
+	<div role="logModal" class="modal column hide">
+		<button role="closeLog">Close Log</button>
 		<textarea role="log" class="log huge">
 		</textarea>
 	</div>
-	
-	<input type="checkbox" id="advancedOptions">
-	<div class="advancedOptions">
+
+	<div role="advancedOptions" class="hide">
 	{%include map_options.html %}
 	<label>Number of tanks:</label> <input role="option" name="numTanks" value="2"/>
 	</div>
@@ -23,23 +21,23 @@ body_class: test
 	<div class="row center">
 		<label>Use API URL:</label> <input class="long" role="apiUrl" placeholder="https://abc/def" />
 		<label>for</label>
-		<select role="tankApi"> 
+		<select role="tankApi">
 		</select>
 		<button role="executeApi">Send</button>
 	</div>
 	<div class="row center">
-		<label>Manually send:</label> 
-		<select role="command"> 
+		<label>Manually send:</label>
+		<select role="command">
 		</select>
 		<label>To:</label>
-		<select role="tankManual"> 
+		<select role="tankManual">
 		</select>
 		<button role="execute">Send</button>
 	</div>
-	
+
 	<div>
-		<button><label for="advancedOptions">Toggle Advanced Options</label></button>
-		<button><label for="showLog">Show Log</label></button>
+		<button role="toggleAdvancedOptions">Toggle Advanced Options</button>
+		<button role="showLog">Show Log</button>
 		<button role="randomMap">Randomize map</button>
 	</div>
 	<div class="row show-when-active">

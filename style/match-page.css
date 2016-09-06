@@ -84,13 +84,6 @@ textarea.log {
   color: #000;
 }
 
-input#advancedOptions { display: none;}
-input#advancedOptions:not(:checked) + .advancedOptions { display: none; }
-
-input#showLog { display: none;}
-input#showLog:not(:checked) + .log { display: none; }
-
-
 .tank1avatar {
   background-image: url('../assets/tiles/tank-green-small.png');
   background-position: left center;
@@ -119,4 +112,3 @@ input#showLog:not(:checked) + .log { display: none; }
 	flex-shrink: 0;
 	padding: 2em 2em 2em 2em;
 }
-

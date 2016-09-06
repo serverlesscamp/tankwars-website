@@ -3,7 +3,7 @@ layout: default
 body_class: home
 
 ---
-#Tankwars
+# Tankwars
 
 * [Run a match](pages/match.html)
 * [API Docs](pages/api.html)

@@ -885,26 +885,31 @@ describe('TankWarsModel', function () {
 			model.executeCommand(0, 'pass');
 			expect(model.getMap().suddenDeathFields).toEqual([]);
 		});
-		it('marks corners during sudden death if no other fields are marked', function () {
-			var model = new TankWarsModel({
+		it('initializes sudden death fields', function () {
+			var growFire = jasmine.createSpy().and.returnValue([{x: 1, y: 3}, {x: 4, y: 3}]),
+				model = new TankWarsModel({
 					tanks: [{x: 1, y: 2, strength: 5, direction: 'left', status: 'xxx'}],
 					walls: [{x: 3, y: 3, strength: 100}],
 					mapWidth: 5,
 					mapHeight: 4,
-					suddenDeath: 0
+					suddenDeath: 0,
+					growFire: growFire
 				});
 			model.executeCommand(0, 'pass');
-			expect(model.getMap().suddenDeathFields).toEqual([{x: 0, y: 0}, {x: 0, y: 3}, {x: 4, y: 0}, {x: 4, y: 3}]);
+			expect(model.getMap().suddenDeathFields).toEqual([{x: 1, y: 3}, {x: 4, y: 3}]);
 			expect(model.getMap().suddenDeath).toEqual(0);
+			expect(growFire).toHaveBeenCalledWith([], 5, 4);
 		});
 		it('causes weapon damage to any tanks caught in sudden death fields', function () {
-			var model = new TankWarsModel({
+			var	growFire = jasmine.createSpy().and.returnValue([{x: 4, y: 3}]),
+				model = new TankWarsModel({
 					tanks: [{x: 1, y: 2, strength: 5, direction: 'left', status: 'xxx'},
 							{x: 4, y: 3, strength: 100, direction: 'top'}],
 					mapWidth: 5,
 					mapHeight: 4,
 					suddenDeath: 0,
-					weaponDamage: 20
+					weaponDamage: 20,
+					growFire: growFire
 				});
 			model.executeCommand(0, 'pass');
 			expect(model.getMap().tanks[0].strength).toEqual(5);
@@ -912,33 +917,36 @@ describe('TankWarsModel', function () {
 			expect(model.getMap().tanks[1].status).toEqual('hit');
 		});
 		it('destroys a tank if strength less than damage', function () {
-			var model = new TankWarsModel({
+			var growFire = jasmine.createSpy().and.returnValue([{x: 4, y: 3}]),
+				model = new TankWarsModel({
 					tanks: [{x: 4, y: 3, strength: 5, direction: 'left', status: 'xxx'}],
 					walls: [{x: 2, y: 2, strength: 100}],
 					mapWidth: 5,
 					mapHeight: 4,
 					suddenDeath: 0,
-					weaponDamage: 20
+					weaponDamage: 20,
+					growFire: growFire
 				});
 			model.executeCommand(0, 'pass');
 			expect(model.getMap().tanks[0].strength).toEqual(0);
 		});
 		it('expands to nearby fields if already in sudden death', function () {
-			var model = new TankWarsModel({
+			var growFire = jasmine.createSpy('growFire').and.returnValue([{x: 1, y: 1}, {x: 2, y: 2}]),
+				model = new TankWarsModel({
 					tanks: [{x: 1, y: 2, strength: 5, direction: 'left', status: 'xxx'}],
 					walls: [{x: 3, y: 3, strength: 100}],
 					mapWidth: 5,
 					mapHeight: 4,
 					suddenDeath: 0,
-					suddenDeathFields: [{x: 2, y: 2}]
+					suddenDeathFields: [{x: 2, y: 2}],
+					growFire: growFire
 				});
 			model.executeCommand(0, 'pass');
 			expect(model.getMap().suddenDeathFields).toEqual([
-					{x: 1, y: 1}, {x: 1, y: 2}, {x: 1, y: 3},
-					{x: 2, y: 1}, {x: 2, y: 2}, {x: 2, y: 3},
-					{x: 3, y: 1}, {x: 3, y: 2}, {x: 3, y: 3}
+					{x: 1, y: 1}, {x: 2, y: 2}
 			]);
 			expect(model.getMap().suddenDeath).toEqual(0);
+			expect(growFire).toHaveBeenCalledWith([{x: 2, y: 2}], 5, 4);
 		});
 	});
 });

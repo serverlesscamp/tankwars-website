@@ -1,36 +1,44 @@
-/*global module*/
-module.exports = function grow(fieldList, width, height) {
+/*global module, require*/
+module.exports = function grow(fieldList, width, height, options) {
 	'use strict';
-	var allPositions = [],
-		result = [],
-		index,
+	var randomizer = (options && options.randomizer) || require('./randomizer'),
 		xdeltas = [-1, 0, 1],
 		ydeltas = [-1, 0, 1],
 		inMap = function (ob) {
 			return ob.x >= 0 && ob.x < width && ob.y >= 0 && ob.y < height;
-		};
+		},
+		fieldInArray = function (array, position) {
+			return array.some(function (field) {
+				return field.x === position.x && field.y === position.y;
+			});
+		},
+		startFire = function () {
+			var howMany = 1 + randomizer.randomInt(4),
+				result = [],
+				field;
+			while (howMany > 0) {
+				field = {x: randomizer.randomInt(width), y: randomizer.randomInt(height)};
+				if (!fieldInArray(result, field)) {
+					result.push(field);
+				}
+				howMany--;
+			}
+			return result;
+		},
+		nearbyFields = [];
+
 	if (!fieldList || !fieldList.length) {
-		return [{x: 0, y: 0}, {x: 0, y: height - 1}, {x: width - 1, y: 0}, {x: width - 1, y: height - 1}];
-	}
-	for (index = 0; index < width; index++) {
-		allPositions[index] = new Array(height).fill(false);
+		return startFire();
 	}
 	fieldList.forEach(function (ob) {
 		xdeltas.forEach(function (dx) {
 			ydeltas.forEach(function (dy) {
 				var point = {x: ob.x + dx, y: ob.y + dy};
-				if (inMap(point)) {
-					allPositions[point.x][point.y] = true;
+				if (inMap(point) && !fieldInArray(fieldList, point)) {
+					nearbyFields.push(point);
 				}
 			});
 		});
 	});
-	allPositions.forEach(function (column, x) {
-		column.forEach(function (val, y) {
-			if (val) {
-				result.push({x: x, y: y});
-			}
-		});
-	});
-	return result;
+	return fieldList.concat(randomizer.shuffle(nearbyFields).slice(randomizer.randomInt(nearbyFields.length)));
 };

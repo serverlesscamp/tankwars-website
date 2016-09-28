@@ -1,8 +1,7 @@
 /*global module, require */
 var makeEmitter = require('./mini-emit'),
 	uuid = require('uuid'),
-	freeSpace = require('./free-space'),
-	grow = require('./grow');
+	freeSpace = require('./free-space');
 module.exports = function TankWarsModel(args) {
 	'use strict';
 	var self = makeEmitter(this),
@@ -29,6 +28,7 @@ module.exports = function TankWarsModel(args) {
 		tankDamage,
 		weaponRange,
 		weaponDamage,
+		growFire = options.growFire || require('./grow'),
 		suddenDeathFields = options.suddenDeathFields || [],
 		suddenDeath,
 		jsonClone = function (obj) {
@@ -152,7 +152,7 @@ module.exports = function TankWarsModel(args) {
 			if (suddenDeath > 0) {
 				suddenDeath--;
 			} else {
-				suddenDeathFields = grow(suddenDeathFields, mapWidth, mapHeight);
+				suddenDeathFields = growFire(suddenDeathFields, mapWidth, mapHeight);
 				suddenDeathFields.map(tankByPoint).filter(notFalsy).forEach(function (tankTarget) {
 					damageTank(tankTarget, 'hit', weaponDamage);
 				});

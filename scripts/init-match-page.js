@@ -34,9 +34,19 @@ module.exports = function initMatchPage(document) {
 				outcome.setAttribute('class', '');
 			}
 		},
+		newMatch = function () {
+			model.newMatch(packOptions(document));
+		},
+		switchPlaces = function () {
+			var v = tank1Api.value;
+			tank1Api.value = tank2Api.value;
+			tank2Api.value = v;
+		},
 		startAgain = function () {
 			matchContainer.classList.remove('results');
 			matchContainer.classList.remove('active');
+			switchPlaces();
+			newMatch();
 		},
 		runCommand = function () {
 			Promise.all([
@@ -75,9 +85,7 @@ module.exports = function initMatchPage(document) {
 		findElement('suddenDeathTurns').innerHTML = map.suddenDeath;
 	});
 
-	initMatch.addEventListener('click', function () {
-		model.newMatch(packOptions(document));
-	});
+	initMatch.addEventListener('click', newMatch);
 	findElement('startAgain').addEventListener('click', startAgain);
 	findElement('toggleAdvancedOptions').addEventListener('click', function () {
 		findElement('advancedOptions').classList.toggle('hide');

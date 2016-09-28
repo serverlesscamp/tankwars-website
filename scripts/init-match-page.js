@@ -42,9 +42,12 @@ module.exports = function initMatchPage(document) {
 			tank1Api.value = tank2Api.value;
 			tank2Api.value = v;
 		},
-		startAgain = function () {
+		hideResults = function () {
 			matchContainer.classList.remove('results');
 			matchContainer.classList.remove('active');
+		},
+		startAgain = function () {
+			hideResults();
 			switchPlaces();
 			newMatch();
 		},
@@ -87,6 +90,7 @@ module.exports = function initMatchPage(document) {
 
 	initMatch.addEventListener('click', newMatch);
 	findElement('startAgain').addEventListener('click', startAgain);
+	findElement('hideResults').addEventListener('click', hideResults);
 	findElement('toggleAdvancedOptions').addEventListener('click', function () {
 		findElement('advancedOptions').classList.toggle('hide');
 	});

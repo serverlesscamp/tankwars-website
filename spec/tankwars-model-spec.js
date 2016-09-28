@@ -98,6 +98,31 @@ describe('TankWarsModel', function () {
 			expect(listener).toHaveBeenCalledWith(model.getMap());
 		});
 	});
+	describe('skipTurns', function () {
+		it('decreases the sudden death counter', function () {
+			var model = new TankWarsModel({
+				tanks: [{x: 1, y: 2, strength: 10, direction: 'left', status: 'xxx'}],
+				walls: [{x: 3, y: 3, strength: 100}],
+				mapWidth: 5,
+				mapHeight: 5,
+				suddenDeath: 90
+			});
+			model.skipTurns(50);
+			expect(model.getMap().suddenDeath).toEqual(40);
+		});
+		it('stops a 0', function () {
+			var model = new TankWarsModel({
+				tanks: [{x: 1, y: 2, strength: 10, direction: 'left', status: 'xxx'}],
+				walls: [{x: 3, y: 3, strength: 100}],
+				mapWidth: 5,
+				mapHeight: 5,
+				suddenDeath: 30
+			});
+			model.skipTurns(50);
+			expect(model.getMap().suddenDeath).toEqual(0);
+		});
+	});
+
 	describe('tank commands', function () {
 
 		['turn-left', 'turn-right', 'forward', 'reverse', 'fire', 'pass'].forEach(function (command) {

@@ -3,6 +3,7 @@
 var TankWarsModel = require('./tankwars-model'),
 	mapWidget = require('./tankwars-map-widget'),
 	tankStatusWidget = require('./update-tank-statuses'),
+	skipTurnsWidget = require('./skip-turns-widget'),
 	localStorageCacheWidget = require('./local-storage-cache-widget'),
 	logWidget = require('./log-widget'),
 	ApiExecutor = require('./api-executor'),
@@ -63,6 +64,7 @@ module.exports = function initMatchPage(document) {
 			model.removeWall(parseInt(e.target.getAttribute('x')), parseInt(e.target.getAttribute('y')));
 		}
 	});
+	skipTurnsWidget(findElement('skipTurns'), model);
 	findElement('execute').addEventListener('click', function () {
 		var tankId = parseInt(manualTankSelector.value);
 		log.appendLog('Manually sending ' + commandSelector.value + ' to tank ' + tankId);

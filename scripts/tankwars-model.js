@@ -260,6 +260,10 @@ module.exports = function TankWarsModel(args) {
 			return tank.strength > 0;
 		}).length < 2;
 	};
+	self.skipTurns = function (howMuch) {
+		suddenDeath = Math.max(suddenDeath - howMuch, 0);
+		self.emit('change', completeMap());
+	};
 	self.getWinner = function () {
 		var result = false;
 		if (!self.isOver()) {

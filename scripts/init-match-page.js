@@ -4,6 +4,7 @@ var TankWarsModel = require('./tankwars-model'),
 	mapWidget = require('./tankwars-map-widget'),
 	tankStatusWidget = require('./update-tank-statuses'),
 	localStorageCacheWidget = require('./local-storage-cache-widget'),
+	skipTurnsWidget = require('./skip-turns-widget'),
 	ApiExecutor = require('./api-executor'),
 	packOptions = require('./pack-options'),
 	logWidget = require('./log-widget'),
@@ -90,6 +91,7 @@ module.exports = function initMatchPage(document) {
 
 	initMatch.addEventListener('click', newMatch);
 	findElement('startAgain').addEventListener('click', startAgain);
+	skipTurnsWidget(findElement('skipTurns'), model);
 	findElement('hideResults').addEventListener('click', hideResults);
 	findElement('toggleAdvancedOptions').addEventListener('click', function () {
 		findElement('advancedOptions').classList.toggle('hide');

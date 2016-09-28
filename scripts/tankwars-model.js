@@ -31,6 +31,9 @@ module.exports = function TankWarsModel(args) {
 		weaponDamage,
 		suddenDeathFields = options.suddenDeathFields || [],
 		suddenDeath,
+		jsonClone = function (obj) {
+			return JSON.parse(JSON.stringify(obj));
+		},
 		completeMap = function () {
 			return {
 				width: mapWidth,
@@ -230,8 +233,11 @@ module.exports = function TankWarsModel(args) {
 				return distance(tank, point) < visibility;
 			},
 			getEnemyInfo = function (enemyTank) {
+				var clone;
 				if (isVisible(enemyTank)) {
-					return enemyTank;
+					clone = jsonClone(enemyTank);
+					delete clone.status;
+					return clone;
 				} else {
 					return {strength: enemyTank.strength};
 				}

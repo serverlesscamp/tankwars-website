@@ -96,8 +96,7 @@ The information on enemy tanks will be in the `enemies` key of the map your comm
   y: int, 
   strength: int, 
   direction: string, /* 'left', 'right', 'top', 'bottom' */
-  ammo: int,
-  status: string
+  ammo: int
 }
 {%endhighlight %}
 

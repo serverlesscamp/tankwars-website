@@ -716,7 +716,7 @@ describe('TankWarsModel', function () {
 		it('includes full information on other tanks within the visibility range', function () {
 			var result = model.getVisibleMapForTank(0);
 			expect(result.enemies.length).toEqual(2);
-			expect(result.enemies[0]).toEqual({x: 3, y: 2, strength: 30, ammo: 100, direction: 'top', status: 'moving'});
+			expect(result.enemies[0]).toEqual({x: 3, y: 2, strength: 30, ammo: 100, direction: 'top'});
 		});
 		it('includes only summary info for the tanks outside the visibility range', function () {
 			var result = model.getVisibleMapForTank(0);
@@ -731,9 +731,9 @@ describe('TankWarsModel', function () {
 		it('returns true if the tank is still in the game', function () {
 			var model = new TankWarsModel({
 				tanks: [
-						{x: 1, y: 2, strength: 200, ammo: 111, direction: 'top', status: 'hit'},
-						{x: 3, y: 2, strength: 1, ammo: 100, direction: 'top', status: 'moving'},
-						{x: 7, y: 7, strength: 0, ammo: 100, direction: 'bottom', status: 'moving'}
+						{x: 1, y: 2, strength: 200, ammo: 111, direction: 'top'},
+						{x: 3, y: 2, strength: 1, ammo: 100, direction: 'top'},
+						{x: 7, y: 7, strength: 0, ammo: 100, direction: 'bottom'}
 						],
 				walls: [{x: 3, y: 3, strength: 100}, {x: 10, y: 10, strength: 50}],
 				mapWidth: 20,
